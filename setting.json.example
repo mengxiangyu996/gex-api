@@ -1,6 +1,6 @@
 {
     "app": {
-        "name": "breeze-api",
+        "name": "breeze",
         "host": "127.0.0.1",
         "port": 3000,
         "key": "your app key"
