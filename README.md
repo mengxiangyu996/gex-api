@@ -16,7 +16,7 @@ mv setting.json.example setting.json
 # 安装依赖
 go mod tidy
 
-# 复制依赖到本项目（可忽略）
+# 复制依赖到本项目
 go mod vendor
 
 # 启动服务
