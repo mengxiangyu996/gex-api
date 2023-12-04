@@ -1,6 +1,6 @@
 package config
 
-import "breeze-api/core/env"
+import "breeze-api/pkg/env"
 
 type MysqlConfig struct {
 	Host     string

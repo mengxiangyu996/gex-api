@@ -1,8 +1,8 @@
 package service
 
 import (
-	"breeze-api/core/dal"
-	"breeze-api/model"
+	"breeze-api/pkg/dal"
+	"breeze-api/internal/model"
 
 	"gorm.io/gorm"
 )

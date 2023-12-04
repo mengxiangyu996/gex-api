@@ -2,8 +2,8 @@ package main
 
 import (
 	"breeze-api/config"
-	"breeze-api/core/dal"
-	"breeze-api/router"
+	"breeze-api/pkg/dal"
+	"breeze-api/internal/router"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,7 +18,7 @@ func main() {
 	dal.InitDal(&dal.Config{})
 
 	// 根目录
-	app.Static("/", "./public")
+	app.Static("/", "./web")
 
 	// 注册路由
 	router.ApiRegister(app)

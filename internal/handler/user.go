@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"breeze-api/core/response"
+	"breeze-api/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 )

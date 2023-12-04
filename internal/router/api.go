@@ -1,8 +1,8 @@
 package router
 
 import (
-	"breeze-api/handler"
-	"breeze-api/middleware"
+	"breeze-api/internal/handler"
+	"breeze-api/internal/middleware"
 
 	"github.com/gofiber/fiber/v2"
 )

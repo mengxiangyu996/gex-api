@@ -6,12 +6,14 @@ import (
 	"gorm.io/gorm"
 )
 
-// 用户角色关联模型
-type UserRoleRelation struct {
+// 权限模型
+type Permission struct {
 	Id         int            `json:"id" gorm:"autoIncrement"`
-	UserId     int            `json:"userId"`
-	RoleId     int            `json:"roleId"`
 	CreateTime time.Time      `json:"createTime"`
 	UpdateTime time.Time      `json:"updateTime"`
 	DeleteTime gorm.DeletedAt `json:"deleteTime"`
+	Name       string         `json:"name"`
+	Path       string         `json:"path"`
+	Method     string         `json:"method"`
+	Status     int            `json:"status" gorm:"default:1"`
 }
