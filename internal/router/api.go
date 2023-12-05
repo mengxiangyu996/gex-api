@@ -12,7 +12,7 @@ func ApiRegister(app *fiber.App) {
 
 	api := app.Group("api", (&middleware.Api{}).Handle)
 	{
-		api.Get("user/detail", (&handler.User{}).Detail)
+		api.Post("index", (&handler.Index{}).Index)
 	}
 
 	return
