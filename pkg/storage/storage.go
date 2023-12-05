@@ -1,39 +1,47 @@
 package storage
 
 import (
+	"crypto/md5"
 	"errors"
+	"fmt"
 	"io/ioutil"
-	"net/textproto"
 	"os"
+	"time"
 )
 
 type Storage struct {
 	Config *Config
-	File   *File
 }
 
 // 配置
 type Config struct {
-	LimitType []string // 限制文件类型
-	LimitSize int64    // 限制文件大小
-	Driver    string   // 储存驱动
-	SavePath  string   // 保存路径
-	FileName  string   // 文件名称
+	FileName    string              // 文件名称
+	FileSize    int64               // 文件大小
+	FileType    string              // 文件类型
+	FileHeader  map[string][]string // 文件头
+	FileContent []byte              // 文件内容
+	LimitSize   int64               // 限制文件大小
+	LimitType   []string            // 限制文件类型
+	SavePath    string              // 保存路径
+	Driver      string              // 储存驱动
 }
 
-// 文件信息
-type File struct {
-	FileName    string               // 文件名称
-	FileType    string               // 文件类型
-	FileSize    int64                // 文件大小
-	FileHeader  textproto.MIMEHeader // 文件头
-	FileContent []byte               // 文件内容
-}
-
+// 存储驱动
 var (
 	LocalDriver = "local"
 	OSSDriver   = "oss"
 )
+
+// 初始化默认配置
+func Default() *Storage {
+	return &Storage{
+		Config: &Config{
+			FileName: fmt.Sprint(md5.Sum([]byte(time.Now().String()))),
+			SavePath: "./web/storage/",
+			Driver:   LocalDriver,
+		},
+	}
+}
 
 // 初始化
 func New(config *Config) *Storage {
@@ -42,26 +50,58 @@ func New(config *Config) *Storage {
 	}
 }
 
-// 设置限制文件类型
-func (t *Storage) SetLimitType(limitType []string) *Storage {
+// 设置文件名
+func (t *Storage) SetFileName(fileName string) *Storage {
 
-	t.Config.LimitType = limitType
+	t.Config.FileName = fileName
+
+	return t
+}
+
+// 设置文件大小
+func (t *Storage) SetFileSize(fileSize int64) *Storage {
+
+	t.Config.FileSize = fileSize
+
+	return t
+}
+
+// 设置文件类型
+func (t *Storage) SetFileType(fileType string) *Storage {
+
+	t.Config.FileType = fileType
+
+	return t
+}
+
+// 设置文件头部
+func (t *Storage) SetFileHeader(fileHeader map[string][]string) *Storage {
+
+	t.Config.FileHeader = fileHeader
+
+	return t
+}
+
+// 设置文件内容
+func (t *Storage) SetFileContent(fileContent []byte) *Storage {
+
+	t.Config.FileContent = fileContent
 
 	return t
 }
 
 // 设置限制文件大小
-func (t *Storage) SetLimitSize(limitSize int64) *Storage {
+func (t *Storage) SetLimitFileSize(limitSize int64) *Storage {
 
 	t.Config.LimitSize = limitSize
 
 	return t
 }
 
-// 设置储存驱动
-func (t *Storage) SetDriver(driver string) *Storage {
+// 设置限制文件类型
+func (t *Storage) SetLimitFileType(limitType []string) *Storage {
 
-	t.Config.Driver = driver
+	t.Config.LimitType = limitType
 
 	return t
 }
@@ -74,18 +114,10 @@ func (t *Storage) SetSavePath(savePath string) *Storage {
 	return t
 }
 
-// 设置文件名
-func (t *Storage) SetFileName(fileName string) *Storage {
+// 设置储存驱动
+func (t *Storage) SetDriver(driver string) *Storage {
 
-	t.Config.FileName = fileName
-
-	return t
-}
-
-// 设置文件信息
-func (t *Storage) SetFile(file *File) *Storage {
-
-	t.File = file
+	t.Config.Driver = driver
 
 	return t
 }
@@ -104,14 +136,10 @@ func (t *Storage) Save() (string, error) {
 	}
 
 	if t.Config.FileName == "" {
-		t.Config.FileName = t.File.FileName
-	}
-
-	if t.Config.FileName == "" {
 		return url, errors.New("缺少文件名")
 	}
 
-	if len(t.File.FileContent) <= 0 {
+	if len(t.Config.FileContent) <= 0 {
 		return url, errors.New("缺少文件内容")
 	}
 
@@ -153,13 +181,13 @@ func (t *Storage) checkFileLimit() error {
 // 检查文件类型
 func (t *Storage) checkLimitType() error {
 
-	if len(t.Config.LimitType) <= 0 || t.File.FileType == "" {
+	if len(t.Config.LimitType) <= 0 || t.Config.FileType == "" {
 		return nil
 	}
 
 	for _, limitType := range t.Config.LimitType {
 		// 类型匹配合法
-		if limitType == t.File.FileType {
+		if limitType == t.Config.FileType {
 			return nil
 		}
 	}
@@ -171,7 +199,7 @@ func (t *Storage) checkLimitType() error {
 // 检查文件大小
 func (t *Storage) checkLimitSize() error {
 
-	if t.Config.LimitSize > 0 && t.File.FileSize > 0 && t.Config.LimitSize < t.File.FileSize {
+	if t.Config.LimitSize > 0 && t.Config.FileSize > 0 && t.Config.LimitSize < t.Config.FileSize {
 		return errors.New("文件大小超出限制")
 	}
 
@@ -188,9 +216,7 @@ func (t *Storage) saveToLocal() error {
 		}
 	}
 
-	err := ioutil.WriteFile(t.Config.SavePath+t.Config.FileName, t.File.FileContent, 0666)
-
-	return err
+	return ioutil.WriteFile(t.Config.SavePath+t.Config.FileName, t.Config.FileContent, 0666)
 }
 
 // 保存至OSS

@@ -1,7 +1,7 @@
 package service
 
 import (
-	"breeze-api/pkg/dal"
+	"breeze-api/pkg/db"
 	"breeze-api/internal/model"
 
 	"gorm.io/gorm"
@@ -12,7 +12,7 @@ type User struct{}
 
 // 创建用户
 func (t *User) Create(user *model.User) error {
-	return dal.DBClient.Model(&model.User{}).Create(&user).Error
+	return db.GormClient.Model(&model.User{}).Create(&user).Error
 }
 
 // 用户详情
@@ -20,7 +20,7 @@ func (t *User) Detail(scopes ...func(*gorm.DB) *gorm.DB) *model.User {
 
 	var user *model.User
 
-	dal.DBClient.Model(&model.User{}).Scopes(scopes...).First(&user)
+	db.GormClient.Model(&model.User{}).Scopes(scopes...).First(&user)
 
 	return user
 }

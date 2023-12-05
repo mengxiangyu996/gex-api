@@ -6,7 +6,6 @@ import (
 	"errors"
 	"io/ioutil"
 	"mime/multipart"
-	"time"
 )
 
 // 上传
@@ -19,12 +18,7 @@ func File(fileHeader *multipart.FileHeader) (string, error) {
 	fileByte, _ := ioutil.ReadAll(file)
 
 	// 保存文件
-	url, err := storage.New(&storage.Config{
-		SavePath: "./web/storage/upload/" + time.Now().Format("20060102") + "/",
-	}).SetFile(&storage.File{
-		FileName:    fileHeader.Filename,
-		FileContent: fileByte,
-	}).Save()
+	url, err := storage.Default().SetFileName(fileHeader.Filename).SetFileContent(fileByte).Save()
 
 	return url, err
 }
@@ -38,12 +32,7 @@ func Base64(file, name string) (string, error) {
 	}
 
 	// 保存文件
-	url, err := storage.New(&storage.Config{
-		SavePath: "./web/storage/upload/" + time.Now().Format("20060102") + "/",
-	}).SetFile(&storage.File{
-		FileName:    name,
-		FileContent: fileByte,
-	}).Save()
+	url, err := storage.Default().SetFileName(name).SetFileContent(fileByte).Save()
 
 	return url, err
 }

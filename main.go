@@ -3,7 +3,7 @@ package main
 import (
 	"breeze-api/config"
 	"breeze-api/internal/router"
-	"breeze-api/pkg/dal"
+	"breeze-api/pkg/db"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -17,10 +17,10 @@ func main() {
 
 	// dsn := "user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
 	dsn := config.Mysql.Username + ":" + config.Mysql.Password + "@tcp(" + config.Mysql.Host + ":" + strconv.Itoa(config.Mysql.Port) + ")/" + config.Mysql.Database + "?charset=utf8mb4&parseTime=True&loc=Local"
-	
+
 	// 初始化数据访问层
-	dal.InitDal(&dal.Config{
-		DBConfig: &dal.DBConfig{
+	db.Init(&db.DBConfig{
+		GormConfig: &db.GormConfig{
 			Dialector: mysql.Open(dsn),
 		},
 	})
