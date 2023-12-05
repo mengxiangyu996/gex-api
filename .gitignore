@@ -25,7 +25,7 @@
 vendor
 
 # 文件存储目录
-/web/app/storage
+/web/storage
 
 # 配置文件
 setting.json
