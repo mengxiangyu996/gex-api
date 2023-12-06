@@ -13,6 +13,7 @@ type Permission struct {
 	UpdateTime time.Time      `json:"updateTime"`
 	DeleteTime gorm.DeletedAt `json:"deleteTime"`
 	Name       string         `json:"name"`
+	GroupName  string         `json:"groupName"`
 	Path       string         `json:"path"`
 	Method     string         `json:"method"`
 	Status     int            `json:"status" gorm:"default:1"`
