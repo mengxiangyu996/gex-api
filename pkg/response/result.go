@@ -2,8 +2,6 @@ package response
 
 import "github.com/gofiber/fiber/v2"
 
-type Response struct{}
-
 type Result struct {
 	Code    int         `json:"code"`
 	Message string      `json:"message"`

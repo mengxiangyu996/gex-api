@@ -8,6 +8,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 func main() {
@@ -22,6 +24,11 @@ func main() {
 	db.Init(&db.DBConfig{
 		GormConfig: &db.GormConfig{
 			Dialector: mysql.Open(dsn),
+			Opts: &gorm.Config{
+				NamingStrategy: schema.NamingStrategy{
+					SingularTable: true,
+				},
+			},
 		},
 	})
 

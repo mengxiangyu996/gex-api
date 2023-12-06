@@ -6,8 +6,6 @@ import (
 	"strings"
 )
 
-type Env struct{}
-
 // 读取配置文件
 func Get(key string, defaultValue interface{}) interface{} {
 

@@ -9,8 +9,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type BD struct{}
-
 type DBConfig struct {
 	GormConfig  *GormConfig
 	RedisConfig *RedisConfig

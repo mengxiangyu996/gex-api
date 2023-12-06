@@ -7,11 +7,10 @@ import (
 	"time"
 )
 
-type Cache struct{}
-
 var path = "./web/storage/cache/"
 
 // 存储数据
+// expire 过期时间，为0时不会过期
 func Set(key string, value interface{}, expire time.Duration) error {
 
 	cache := new(&cache{

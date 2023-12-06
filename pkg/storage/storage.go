@@ -9,10 +9,8 @@ import (
 	"time"
 )
 
-type Storage struct{}
-
 // 文件储存
-type Store struct {
+type Storage struct {
 	Config *Config
 }
 
@@ -36,8 +34,8 @@ var (
 )
 
 // 初始化默认配置
-func Default() *Store {
-	return &Store{
+func Default() *Storage {
+	return &Storage{
 		Config: &Config{
 			FileName: fmt.Sprint(md5.Sum([]byte(time.Now().String()))),
 			SavePath: "./web/storage/file/",
@@ -47,14 +45,14 @@ func Default() *Store {
 }
 
 // 初始化
-func New(config *Config) *Store {
-	return &Store{
+func New(config *Config) *Storage {
+	return &Storage{
 		Config: config,
 	}
 }
 
 // 设置文件名
-func (t *Store) SetFileName(fileName string) *Store {
+func (t *Storage) SetFileName(fileName string) *Storage {
 
 	t.Config.FileName = fileName
 
@@ -62,7 +60,7 @@ func (t *Store) SetFileName(fileName string) *Store {
 }
 
 // 设置文件大小
-func (t *Store) SetFileSize(fileSize int64) *Store {
+func (t *Storage) SetFileSize(fileSize int64) *Storage {
 
 	t.Config.FileSize = fileSize
 
@@ -70,7 +68,7 @@ func (t *Store) SetFileSize(fileSize int64) *Store {
 }
 
 // 设置文件类型
-func (t *Store) SetFileType(fileType string) *Store {
+func (t *Storage) SetFileType(fileType string) *Storage {
 
 	t.Config.FileType = fileType
 
@@ -78,7 +76,7 @@ func (t *Store) SetFileType(fileType string) *Store {
 }
 
 // 设置文件头部
-func (t *Store) SetFileHeader(fileHeader map[string][]string) *Store {
+func (t *Storage) SetFileHeader(fileHeader map[string][]string) *Storage {
 
 	t.Config.FileHeader = fileHeader
 
@@ -86,7 +84,7 @@ func (t *Store) SetFileHeader(fileHeader map[string][]string) *Store {
 }
 
 // 设置文件内容
-func (t *Store) SetFileContent(fileContent []byte) *Store {
+func (t *Storage) SetFileContent(fileContent []byte) *Storage {
 
 	t.Config.FileContent = fileContent
 
@@ -94,7 +92,7 @@ func (t *Store) SetFileContent(fileContent []byte) *Store {
 }
 
 // 设置限制文件大小
-func (t *Store) SetLimitFileSize(limitSize int64) *Store {
+func (t *Storage) SetLimitFileSize(limitSize int64) *Storage {
 
 	t.Config.LimitSize = limitSize
 
@@ -102,7 +100,7 @@ func (t *Store) SetLimitFileSize(limitSize int64) *Store {
 }
 
 // 设置限制文件类型
-func (t *Store) SetLimitFileType(limitType []string) *Store {
+func (t *Storage) SetLimitFileType(limitType []string) *Storage {
 
 	t.Config.LimitType = limitType
 
@@ -110,7 +108,7 @@ func (t *Store) SetLimitFileType(limitType []string) *Store {
 }
 
 // 设置文件保存路径
-func (t *Store) SetSavePath(savePath string) *Store {
+func (t *Storage) SetSavePath(savePath string) *Storage {
 
 	t.Config.SavePath = savePath
 
@@ -118,7 +116,7 @@ func (t *Store) SetSavePath(savePath string) *Store {
 }
 
 // 设置储存驱动
-func (t *Store) SetDriver(driver string) *Store {
+func (t *Storage) SetDriver(driver string) *Storage {
 
 	t.Config.Driver = driver
 
@@ -126,7 +124,7 @@ func (t *Store) SetDriver(driver string) *Store {
 }
 
 // 保存文件
-func (t *Store) Save() (string, error) {
+func (t *Storage) Save() (string, error) {
 
 	var (
 		url string
@@ -166,7 +164,7 @@ func (t *Store) Save() (string, error) {
 }
 
 // 检查文件限制
-func (t *Store) checkFileLimit() error {
+func (t *Storage) checkFileLimit() error {
 
 	// 检查文件类型
 	if err := t.checkLimitType(); err != nil {
@@ -182,7 +180,7 @@ func (t *Store) checkFileLimit() error {
 }
 
 // 检查文件类型
-func (t *Store) checkLimitType() error {
+func (t *Storage) checkLimitType() error {
 
 	if len(t.Config.LimitType) <= 0 || t.Config.FileType == "" {
 		return nil
@@ -200,7 +198,7 @@ func (t *Store) checkLimitType() error {
 }
 
 // 检查文件大小
-func (t *Store) checkLimitSize() error {
+func (t *Storage) checkLimitSize() error {
 
 	if t.Config.LimitSize > 0 && t.Config.FileSize > 0 && t.Config.LimitSize < t.Config.FileSize {
 		return errors.New("文件大小超出限制")
@@ -210,7 +208,7 @@ func (t *Store) checkLimitSize() error {
 }
 
 // 保存至本地
-func (t *Store) saveToLocal() error {
+func (t *Storage) saveToLocal() error {
 
 	// 检查文件保存路径
 	if _, err := os.Stat(t.Config.SavePath); err != nil {
@@ -223,7 +221,7 @@ func (t *Store) saveToLocal() error {
 }
 
 // 保存至OSS
-func (t *Store) saveToOSS() error {
+func (t *Storage) saveToOSS() error {
 
 	// TODO
 

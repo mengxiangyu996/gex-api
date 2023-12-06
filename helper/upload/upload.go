@@ -1,15 +1,14 @@
 package upload
 
 import (
+	"breeze-api/config"
 	"breeze-api/pkg/storage"
 	"encoding/base64"
 	"errors"
 	"io/ioutil"
 	"mime/multipart"
+	"strings"
 )
-
-// 上传
-type Upload struct{}
 
 // 上传文件
 func File(fileHeader *multipart.FileHeader) (string, error) {
@@ -35,4 +34,14 @@ func Base64(file, name string) (string, error) {
 	url, err := storage.Default().SetFileName(name).SetFileContent(fileByte).Save()
 
 	return url, err
+}
+
+// 重写url
+func rewriteUrl(url string) string {
+
+	if strings.HasPrefix(url, "http") {
+		return url
+	}
+
+	return config.App.Domain + strings.ReplaceAll(url, "./web/app", "")
 }

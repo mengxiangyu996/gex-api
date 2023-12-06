@@ -1,14 +1,16 @@
 {
     "app": {
+        "domain": "http://127.0.0.1:3000",
         "name": "breeze",
         "host": "127.0.0.1",
         "port": 3000,
-        "key": "your app key"
+        "mode": "debug",
+        "key": "breeze"
     },
     "mysql": {
         "host": "127.0.0.1",
         "port": 3306,
-        "database": "your database name",
+        "database": "breeze",
         "username": "root",
         "password": "root"
     },

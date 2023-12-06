@@ -11,9 +11,6 @@ import (
 	"strings"
 )
 
-// HTTP
-type Http struct{}
-
 // HTTP请求参数
 type RequestParam struct {
 	Url     string
