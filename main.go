@@ -2,7 +2,6 @@ package main
 
 import (
 	"breeze-api/config"
-	"breeze-api/database"
 	"breeze-api/internal/router"
 	"breeze-api/pkg/db"
 	"strconv"
@@ -38,9 +37,6 @@ func main() {
 
 	// 注册路由
 	router.AadminRegister(app)
-
-	// 初始化数据表
-	database.Handle()
 
 	app.Listen(config.App.Host + ":" + strconv.Itoa(config.App.Port))
 }
