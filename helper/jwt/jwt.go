@@ -1,4 +1,4 @@
-package token
+package jwt
 
 import (
 	"breeze-api/config"

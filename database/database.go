@@ -1,20 +1,20 @@
 package database
 
 import (
-	"breeze-api/pkg/db"
-	"io/ioutil"
+	"breeze-api/helper/encrypt"
+	"breeze-api/internal/model"
+	"breeze-api/internal/service"
 )
 
-// 填充数据
+// 初始化数据表
 func Handle() {
 
-	sql, err := ioutil.ReadFile("database/init.sql")
-	if err != nil {
-		panic(err)
-	}
+	(&service.User{}).CreateUser(&model.User{
+		Username: "admin",
+		Password: encrypt.Generate("123456"),
+		IsAdmin: 1,
+		Nickname: "超级管理员",
+		Gender: 1,
+	})
 
-	err = db.GormClient.Exec(string(sql)).Error
-	if err != nil {
-		panic(err)
-	}
 }

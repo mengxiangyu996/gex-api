@@ -1,5 +1,5 @@
 -- 用户表
-create table if not exists byyfuncamera.`user` (
+create table if not exists `user` (
     `id` int(10) auto_increment comment 'id' primary key,
     `create_time` datetime comment '创建时间',
     `update_time` datetime comment '更新时间',
@@ -18,7 +18,7 @@ create table if not exists byyfuncamera.`user` (
 ) comment '用户表';
 
 -- 角色表
-create table if not exists byyfuncamera.`role` (
+create table if not exists `role` (
     `id` int(10) auto_increment comment 'id' primary key,
     `create_time` datetime comment '创建时间',
     `update_time` datetime comment '更新时间',
@@ -28,7 +28,7 @@ create table if not exists byyfuncamera.`role` (
 ) comment '角色表';
 
 -- 菜单表
-create table if not exists byyfuncamera.`menu` (
+create table if not exists `menu` (
     `id` int(10) auto_increment comment 'id' primary key,
     `create_time` datetime comment '创建时间',
     `update_time` datetime comment '更新时间',
@@ -45,7 +45,7 @@ create table if not exists byyfuncamera.`menu` (
 ) comment '菜单表';
 
 -- 权限表
-create table if not exists byyfuncamera.`permission` (
+create table if not exists `permission` (
     `id` int(10) auto_increment comment 'id' primary key,
     `create_time` datetime comment '创建时间',
     `update_time` datetime comment '更新时间',
@@ -58,7 +58,7 @@ create table if not exists byyfuncamera.`permission` (
 ) comment '权限表';
 
 -- 用户角色关系表
-create table if not exists byyfuncamera.`user_role_relation` (
+create table if not exists `user_role_relation` (
     `id` int(10) auto_increment comment 'id' primary key,
     `create_time` datetime comment '创建时间',
     `update_time` datetime comment '更新时间',
@@ -68,7 +68,7 @@ create table if not exists byyfuncamera.`user_role_relation` (
 ) comment '用户角色关系表';
 
 -- 角色菜单关系表
-create table if not exists byyfuncamera.`role_permission_relation` (
+create table if not exists `role_menu_relation` (
     `id` int(10) auto_increment comment 'id' primary key,
     `create_time` datetime comment '创建时间',
     `update_time` datetime comment '更新时间',
@@ -78,7 +78,7 @@ create table if not exists byyfuncamera.`role_permission_relation` (
 ) comment '角色菜单关系表';
 
 -- 角色权限关系表
-create table if not exists byyfuncamera.`role_permission_relation` (
+create table if not exists `role_permission_relation` (
     `id` int(10) auto_increment comment 'id' primary key,
     `create_time` datetime comment '创建时间',
     `update_time` datetime comment '更新时间',

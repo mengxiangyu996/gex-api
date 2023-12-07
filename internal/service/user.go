@@ -33,14 +33,15 @@ func (t *User) DeleteUser(id int) error {
 }
 
 // 获取用户列表
+// isAdmin 为-1时，查询全部
 func (t *User) GetUserListByPage(page, size, isAdmin int) ([]*model.User, int) {
 
 	var (
-		list []*model.User
+		list  []*model.User
 		count int64
 	)
 
-	query := db.GormClient.Model(&model.User{})
+	query := db.GormClient.Model(&model.User{}).Order("id desc")
 
 	if isAdmin > -1 {
 		query.Where("is_admin = ?", isAdmin)
@@ -52,7 +53,6 @@ func (t *User) GetUserListByPage(page, size, isAdmin int) ([]*model.User, int) {
 
 	return list, int(count)
 }
-
 
 // 获取用户详情
 func (t *User) GetUserById(id int) *model.User {

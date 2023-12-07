@@ -37,9 +37,9 @@ func main() {
 	app.Static("/", "./web")
 
 	// 注册路由
-	router.ApiRegister(app)
+	router.AadminRegister(app)
 
-	// 构建数据库
+	// 初始化数据表
 	database.Handle()
 
 	app.Listen(config.App.Host + ":" + strconv.Itoa(config.App.Port))

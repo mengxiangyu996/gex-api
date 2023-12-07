@@ -40,13 +40,23 @@ func (t *Role) GetRoleListByPage(page, size int) ([]*model.Role, int) {
 		count int64
 	)
 
-	query := db.GormClient.Model(&model.Role{})
+	query := db.GormClient.Model(&model.Role{}).Order("id desc")
 
 	query.Count(&count)
 
 	query.Limit(size).Offset((page - 1) * size).Find(&list)
 
 	return list, int(count)
+}
+
+// 获取角色列表
+func (t *Role) GetRoleListByIds(ids []int) []*model.Role {
+
+	var list []*model.Role
+
+	db.GormClient.Model(&model.Role{}).Order("id desc").Where("id in ?", ids).Find(&list)
+
+	return list
 }
 
 // 获取角色详情

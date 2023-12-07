@@ -6,10 +6,10 @@ import (
 )
 
 // 访问权限数据
-type permission struct{}
+type Permission struct{}
 
 // 创建权限
-func (t *permission) Createpermission(permission *model.Permission) error {
+func (t *Permission) CreatePermission(permission *model.Permission) error {
 
 	err := db.GormClient.Model(&model.Permission{}).Create(&permission).Error
 
@@ -17,7 +17,7 @@ func (t *permission) Createpermission(permission *model.Permission) error {
 }
 
 // 更新权限
-func (t *permission) Updatepermission(permission *model.Permission) error {
+func (t *Permission) UpdatePermission(permission *model.Permission) error {
 
 	err := db.GormClient.Model(&model.Permission{}).Where("id = ?", permission.Id).Updates(&permission).Error
 
@@ -25,7 +25,7 @@ func (t *permission) Updatepermission(permission *model.Permission) error {
 }
 
 // 删除权限
-func (t *permission) Deletepermission(id int) error {
+func (t *Permission) DeletePermission(id int) error {
 
 	err := db.GormClient.Model(&model.Permission{}).Where("id = ?", id).Delete(&model.Permission{}).Error
 
@@ -33,14 +33,14 @@ func (t *permission) Deletepermission(id int) error {
 }
 
 // 获取权限列表
-func (t *permission) GetpermissionListByPage(page, size int) ([]*model.Permission, int) {
+func (t *Permission) GetPermissionListByPage(page, size int) ([]*model.Permission, int) {
 
 	var (
 		list []*model.Permission
 		count int64
 	)
 
-	query := db.GormClient.Model(&model.Permission{})
+	query := db.GormClient.Model(&model.Permission{}).Order("id desc")
 
 	query.Count(&count)
 
@@ -49,12 +49,32 @@ func (t *permission) GetpermissionListByPage(page, size int) ([]*model.Permissio
 	return list, int(count)
 }
 
+// 获取权限列表
+func (t *Permission) GetPermissionList() []*model.Permission {
+
+	var list []*model.Permission
+
+	db.GormClient.Model(&model.Permission{}).Order("id desc").Find(&list)
+
+	return list
+}
+
 // 获取权限详情
-func (t *permission) GetpermissionById(id int) *model.Permission {
+func (t *Permission) GetPermissionById(id int) *model.Permission {
 
 	var detail *model.Permission
 
 	db.GormClient.Model(&model.Permission{}).Where("id = ?", id).Take(&detail)
+
+	return detail
+}
+
+// 获取权限详情
+func (t *Permission) GetPermissionByPathWithMethod(path, method string) *model.Permission {
+
+	var detail *model.Permission
+
+	db.GormClient.Model(&model.Permission{}).Where("path = ?", path).Where("method = ?", method).Take(&detail)
 
 	return detail
 }
