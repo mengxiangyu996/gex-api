@@ -17,7 +17,7 @@ type RequestParam struct {
 	Method  string
 	Header  map[string]interface{}
 	Query   map[string]interface{}
-	JSON    map[string]interface{}
+	Json    map[string]interface{}
 	Form    map[string]interface{}
 	Context context.Context
 }
@@ -108,9 +108,9 @@ func postRequest(requestParam *RequestParam) (*http.Request, error) {
 	var body io.Reader
 
 	// Json 传参
-	if requestParam.JSON != nil {
+	if requestParam.Json != nil {
 		// 将json序列化为字节数组
-		jsonData, _ := json.Marshal(requestParam.JSON)
+		jsonData, _ := json.Marshal(requestParam.Json)
 		body = bytes.NewBuffer(jsonData)
 	}
 
