@@ -3,7 +3,7 @@ package http
 import (
 	"bytes"
 	"context"
-	"encoding/json"
+	"encoding/Json"
 	"fmt"
 	"io"
 	"net/http"
@@ -17,7 +17,7 @@ type RequestParam struct {
 	Method  string
 	Header  map[string]interface{}
 	Query   map[string]interface{}
-	JSON    map[string]interface{}
+	Json    map[string]interface{}
 	Form    map[string]interface{}
 	Context context.Context
 }
@@ -108,10 +108,10 @@ func postRequest(requestParam *RequestParam) (*http.Request, error) {
 	var body io.Reader
 
 	// Json 传参
-	if requestParam.JSON != nil {
-		// 将json序列化为字节数组
-		jsonData, _ := json.Marshal(requestParam.JSON)
-		body = bytes.NewBuffer(jsonData)
+	if requestParam.Json != nil {
+		// 将Json序列化为字节数组
+		JsonData, _ := json.Marshal(requestParam.Json)
+		body = bytes.NewBuffer(JsonData)
 	}
 
 	// Form 传参
