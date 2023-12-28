@@ -10,12 +10,12 @@ type Result struct {
 
 // 成功
 func Success(ctx *fiber.Ctx, message string, data interface{}) error {
-	return Base(ctx, 0, message, data)
+	return Base(ctx, 10200, message, data)
 }
 
 // 失败
 func Error(ctx *fiber.Ctx, message string) error {
-	return Base(ctx, 1001, message, nil)
+	return Base(ctx, 10500, message, nil)
 }
 
 // 自定义
