@@ -1,5 +1,5 @@
 ---
-title: 初始接口
+title: 项目接口
 language_tabs:
   - shell: Shell
   - http: HTTP
@@ -19,7 +19,7 @@ generator: "@tarslib/widdershins v4.0.19"
 
 ---
 
-# 初始接口
+# 项目接口
 
 > v1.0.0
 
