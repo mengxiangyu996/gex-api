@@ -2,6 +2,8 @@ package main
 
 import (
 	"breeze-api/config"
+	"breeze-api/database"
+	"breeze-api/internal/router"
 	"breeze-api/pkg/db"
 	"strconv"
 
@@ -33,6 +35,12 @@ func main() {
 
 	// 根目录
 	app.Static("/", "./web")
+
+	// 初始化数据库
+	database.Init()
+
+	// 注册路由
+	router.AdminRouter(app)
 
 	app.Listen(config.App.Host + ":" + strconv.Itoa(config.App.Port))
 }

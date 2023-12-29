@@ -29,3 +29,6 @@ vendor
 
 # 配置文件
 setting.json
+
+# 锁文件
+app.lock
