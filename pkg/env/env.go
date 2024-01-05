@@ -10,7 +10,7 @@ import (
 func Get(key string, defaultValue interface{}) interface{} {
 
 	// 读取 JSON 文件
-	data, err := ioutil.ReadFile("setting.json")
+	data, err := ioutil.ReadFile("env.json")
 	if err != nil {
 		return defaultValue
 	}

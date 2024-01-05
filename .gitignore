@@ -28,4 +28,4 @@ vendor
 /web/storage
 
 # 配置文件
-setting.json
+env.json
