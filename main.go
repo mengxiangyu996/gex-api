@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -33,6 +34,9 @@ func main() {
 
 	// 根目录
 	app.Static("/", "./web")
+
+	// 恢复
+	app.Use(recover.New())
 
 	app.Listen(config.App.Host + ":" + strconv.Itoa(config.App.Port))
 }
