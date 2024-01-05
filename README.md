@@ -11,7 +11,7 @@ git clone git@github.com:ZeroMxy/breeze-api.git
 cd breeze-api
 
 # 修改配置文件
-mv setting.json.example setting.json
+mv env.json.example env.json
 
 # 安装依赖
 go mod tidy
