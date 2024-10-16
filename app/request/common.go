@@ -7,7 +7,7 @@ type QueryId struct {
 
 // 分页请求
 type QueryPage struct {
-	IsPaging bool `default:"true"`
-	Page     int  `query:"page" default:"1"`
-	Size     int  `query:"size" default:"10"`
+	IsPaging bool
+	Page     int `query:"page" default:"1"`
+	Size     int `query:"size" default:"10"`
 }

@@ -15,7 +15,19 @@ type UpdateRole struct {
 
 // 角色列表
 type QueryListRole struct {
-	*QueryPage
+	QueryPage
 	Name   string `query:"name"`
 	Status int    `query:"status"`
+}
+
+// 角色绑定菜单
+type RoleBindMenu struct {
+	RoleId  int   `json:"roleId"`
+	MenuIds []int `json:"menuIds"`
+}
+
+// 角色绑定权限
+type RoleBindPermission struct {
+	RoleId        int   `json:"roleId"`
+	PermissionIds []int `json:"permissionIds"`
 }

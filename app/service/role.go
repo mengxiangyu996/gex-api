@@ -66,19 +66,29 @@ func (*Role) GetDetailById(id int) *response.RoleDetail {
 	return detail
 }
 
+// 角色选项
+func (*Role) Option() []*response.Option {
+
+	list := make([]*response.Option, 0)
+
+	dal.Gorm.Model(&model.Role{}).Select("id as value", "name as label").Where("status = ?", 1).Scan(&list)
+
+	return list
+}
+
 // 角色绑定菜单
-func (*Role) BindMenu(roleId int, menuIds []int) error {
+func (*Role) BindMenu(param *request.RoleBindMenu) error {
 
 	query := dal.Gorm.Begin()
 
-	if err := query.Model(&model.RoleMenu{}).Where("role_id = ?", roleId).Delete(nil).Error; err != nil {
+	if err := query.Model(&model.RoleMenu{}).Where("role_id = ?", param.RoleId).Delete(nil).Error; err != nil {
 		query.Rollback()
 		return err
 	}
 
-	for _, menuId := range menuIds {
+	for _, menuId := range param.MenuIds {
 		if err := query.Model(&model.RoleMenu{}).Create(&model.RoleMenu{
-			RoleId: roleId,
+			RoleId: param.RoleId,
 			MenuId: menuId,
 		}).Error; err != nil {
 			query.Rollback()
@@ -100,18 +110,18 @@ func (*Role) GetBindMenu(roleId int) []int {
 }
 
 // 角色绑定权限
-func (*Role) BindPermission(roleId int, permissionIds []int) error {
+func (*Role) BindPermission(param *request.RoleBindPermission) error {
 
 	query := dal.Gorm.Begin()
 
-	if err := query.Model(&model.RolePermission{}).Where("role_id = ?", roleId).Delete(nil).Error; err != nil {
+	if err := query.Model(&model.RolePermission{}).Where("role_id = ?", param.RoleId).Delete(nil).Error; err != nil {
 		query.Rollback()
 		return err
 	}
 
-	for _, permissionId := range permissionIds {
+	for _, permissionId := range param.PermissionIds {
 		if err := query.Model(&model.RolePermission{}).Create(&model.RolePermission{
-			RoleId:       roleId,
+			RoleId:       param.RoleId,
 			PermissionId: permissionId,
 		}).Error; err != nil {
 			query.Rollback()

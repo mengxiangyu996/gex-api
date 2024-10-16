@@ -33,7 +33,7 @@ type UpdateMenu struct {
 
 // 菜单列表
 type QueryListMenu struct {
-	*QueryPage
+	QueryPage
 	Name      string `query:"name"`
 	Path      string `query:"path"`
 	Component string `query:"component"`

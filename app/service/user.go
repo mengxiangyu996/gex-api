@@ -25,7 +25,7 @@ func (*User) Create(user *request.CreateUser) int {
 		Status:   user.Status,
 	}
 
-	if err := dal.Gorm.Model(&model.User{}).Create(&data); err != nil {
+	if err := dal.Gorm.Model(&model.User{}).Create(&data).Error; err != nil {
 		return 0
 	}
 
@@ -42,15 +42,16 @@ func (*User) Update(user *request.UpdateUser) int {
 		Gender:   user.Gender,
 		Email:    user.Email,
 		Phone:    user.Phone,
+		Password: user.Password,
 		Avatar:   user.Avatar,
 		Status:   user.Status,
 	}
 
-	if err := dal.Gorm.Model(&model.User{}).Where("id = ?", user.Id).Updates(&data); err != nil {
+	if err := dal.Gorm.Model(&model.User{}).Where("id = ?", user.Id).Updates(&data).Error; err != nil {
 		return 0
 	}
 
-	return data.Id
+	return user.Id
 }
 
 // 删除用户
@@ -120,18 +121,18 @@ func (*User) GetDetailByUsername(username string) *response.UserDetail {
 }
 
 // 用户绑定角色
-func (*User) BindRole(userId int, roleIds []int) error {
+func (*User) BindRole(param *request.AdminBindRole) error {
 
 	query := dal.Gorm.Begin()
 
-	if err := query.Model(&model.UserRole{}).Where("user_id = ?", userId).Delete(nil).Error; err != nil {
+	if err := query.Model(&model.UserRole{}).Where("user_id = ?", param.UserId).Delete(nil).Error; err != nil {
 		query.Rollback()
 		return err
 	}
 
-	for _, roleId := range roleIds {
+	for _, roleId := range param.RoleIds {
 		if err := query.Model(&model.UserRole{}).Create(&model.UserRole{
-			UserId: userId,
+			UserId: param.UserId,
 			RoleId: roleId,
 		}).Error; err != nil {
 			query.Rollback()

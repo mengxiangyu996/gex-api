@@ -29,7 +29,7 @@ type UpdateUser struct {
 
 // 用户列表
 type QueryListUser struct {
-	*QueryPage
+	QueryPage
 	Role     int    `query:"role"`
 	Username string `query:"username"`
 	Nickname string `query:"nickname"`

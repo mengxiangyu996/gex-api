@@ -85,6 +85,8 @@ func (*User) List(ctx *builder.Context) error {
 		return ctx.Fail(err.Error())
 	}
 
+	param.IsPaging = true
+
 	list, count := (&service.User{}).GetList(&param)
 
 	return ctx.Success(&response.List{
@@ -134,7 +136,9 @@ func (*User) Login(ctx *builder.Context) error {
 		Expire: time.Now().AddDate(0, 0, 7),
 	})
 
-	return ctx.Success(token)
+	return ctx.Success(&response.Token{
+		Token: token,
+	})
 }
 
 // 后台用户重置密码
@@ -179,9 +183,54 @@ func (*User) BindRole(ctx *builder.Context) error {
 		return ctx.Fail("用户不是管理员")
 	}
 
-	if err := (&service.User{}).BindRole(param.UserId, param.RoleIds); err != nil {
+	if err := (&service.User{}).BindRole(&param); err != nil {
 		return ctx.Fail(err.Error())
 	}
 
 	return ctx.Success()
+}
+
+// 后台用户所绑定的角色
+func (*User) Roles(ctx *builder.Context) error {
+
+	var param request.QueryId
+
+	if err := ctx.BindX(&param); err != nil {
+		return ctx.Fail(err.Error())
+	}
+
+	list := make([]*response.RoleDetail, 0)
+
+	roleIds := (&service.User{}).GetBindRole(param.Id)
+
+	for _, roleId := range roleIds {
+		if role := (&service.Role{}).GetDetailById(roleId); role.Id > 0 {
+			list = append(list, &response.RoleDetail{
+				Id:   role.Id,
+				Name: role.Name,
+			})
+		}
+	}
+
+	return ctx.Success(list)
+}
+
+// 登录的用户所拥有的菜单列表树
+func (*User) MenuTree(ctx *builder.Context) error {
+
+	id, _ := utils.GetTokenPayload(ctx.GetHeader("Token"))
+
+	roleIds := (&service.User{}).GetBindRole(id)
+
+	var menuIds []int
+
+	for _, roleId := range roleIds {
+		menuIds = append(menuIds, (&service.Role{}).GetBindMenu(roleId)...)
+	}
+
+	list := (&service.Menu{}).GetListByIds(menuIds)
+
+	tree := (&service.Menu{}).ListToTree(list, 0)
+
+	return ctx.Success(tree)
 }

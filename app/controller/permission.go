@@ -83,6 +83,8 @@ func (*Permission) List(ctx *builder.Context) error {
 		return ctx.Fail(err.Error())
 	}
 
+	param.IsPaging = true
+
 	list, count := (&service.Permission{}).GetList(&param)
 
 	return ctx.Success(&response.List{

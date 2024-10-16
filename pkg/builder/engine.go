@@ -16,10 +16,8 @@ type MiddlewareFunc func(HandlerFunc) HandlerFunc
 
 // Engine 是应用的核心结构，封装了Echo框架的实例和其他配置
 type Engine struct {
-	echo        *echo.Echo
-	config      *Config
-	middlewares []MiddlewareFunc
-	groups      []*RouteGroup
+	echo   *echo.Echo
+	config *Config
 	*RouteGroup
 }
 
@@ -52,7 +50,6 @@ func New(config *Config) *Engine {
 	engine := &Engine{
 		echo:   e,
 		config: config,
-		groups: []*RouteGroup{},
 	}
 
 	engine.RouteGroup = &RouteGroup{
@@ -89,31 +86,18 @@ func (t *Engine) Static(prefix, root string) {
 
 // Use 添加全局中间件
 func (t *Engine) Use(middlewares ...MiddlewareFunc) {
-	t.middlewares = append(t.middlewares, middlewares...)
+	t.echo.Use(t.handleMiddlewares(middlewares)...)
 }
 
 // Group 创建一个新的路由组，并应用中间件
 func (t *Engine) Group(prefix string, middlewares ...MiddlewareFunc) *RouteGroup {
 
-	echoGroup := t.echo.Group(prefix)
-
-	// 应用传入的中间件
-	for _, middleware := range middlewares {
-		echoGroup.Use(t.wrapMiddleware(middleware))
-	}
-
-	// 应用全局中间件
-	for _, middleware := range t.middlewares {
-		echoGroup.Use(t.wrapMiddleware(middleware))
-	}
+	echoGroup := t.echo.Group(prefix, t.handleMiddlewares(middlewares)...)
 
 	routeGroup := &RouteGroup{
 		engine:    t,
 		echoGroup: echoGroup,
 	}
-
-	// 将新创建的路由组添加到引擎的组中
-	t.groups = append(t.groups, routeGroup)
 
 	return routeGroup
 }
@@ -177,25 +161,12 @@ func (t *Engine) Any(path string, handler HandlerFunc, middlewares ...Middleware
 // Group 创建一个新的路由组，并应用中间件
 func (t *RouteGroup) Group(prefix string, middlewares ...MiddlewareFunc) *RouteGroup {
 
-	echoGroup := t.echoGroup.Group(prefix)
-
-	// 应用传入的中间件
-	for _, middleware := range middlewares {
-		echoGroup.Use(t.engine.wrapMiddleware(middleware))
-	}
-
-	// 应用全局中间件
-	for _, middleware := range t.engine.middlewares {
-		echoGroup.Use(t.engine.wrapMiddleware(middleware))
-	}
+	echoGroup := t.echoGroup.Group(prefix, t.engine.handleMiddlewares(middlewares)...)
 
 	routeGroup := &RouteGroup{
 		engine:    t.engine,
 		echoGroup: echoGroup,
 	}
-
-	// 将新创建的路由组添加到引擎的组中
-	t.engine.groups = append(t.engine.groups, routeGroup)
 
 	return routeGroup
 }

@@ -21,7 +21,7 @@ type UpdatePermission struct {
 
 // 权限列表
 type QueryListPermission struct {
-	*QueryPage
+	QueryPage
 	Name      string `query:"name"`
 	GroupName string `query:"groupName"`
 	Path      string `query:"path"`

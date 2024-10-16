@@ -1,8 +1,9 @@
 package main
 
 import (
+	"gex-api/app/database"
+	"gex-api/app/route"
 	"gex-api/config"
-	"gex-api/database"
 	"gex-api/pkg/builder"
 	"gex-api/pkg/dal"
 	"log"
@@ -20,7 +21,7 @@ func main() {
 
 	// 传入配置用来链接mysql和redis
 	// 以 server := builder.New(&builder.Config{}) 初始化的时候不会初始化mysql服务，需注释掉下方初始化数据库的流程
-	
+
 	server := builder.New(&builder.Config{
 		GormConfig: &dal.GormConfig{
 			Dialector: mysql.Open(dsn),
@@ -42,9 +43,8 @@ func main() {
 	// 配置静态文件
 	server.Static("/", "web")
 
-	server.Get("/hello", func(ctx *builder.Context) error {
-		return ctx.String(200, "Hello, World!")
-	})
+	// 注册后台路由
+	route.AdminApi(server)
 
 	// 启动服务
 	server.Start(config.App.Host)

@@ -20,6 +20,20 @@ func CheckRegex(expr, content string) bool {
 	return r.MatchString(content)
 }
 
+// 数据是否存在于切片
+// 存在返回true
+// 不存在返回false
+func Contains[T comparable](slice []T, item T) bool {
+
+	for _, v := range slice {
+		if v == item {
+			return true
+		}
+	}
+
+	return false
+}
+
 // 获取授权信息
 func GetTokenPayload(token string) (int, error) {
 	

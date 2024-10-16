@@ -11,6 +11,7 @@ type PermissionList struct {
 	Method     string            `json:"method"`
 	Status     int               `json:"status"`
 	CreateTime datetime.Datetime `json:"createTime"`
+	IsBind     bool              `json:"isBind" gorm:"-"`
 }
 
 // 权限详情

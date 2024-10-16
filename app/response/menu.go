@@ -17,6 +17,7 @@ type MenuList struct {
 	Redirect   string            `json:"redirect"`
 	Status     int               `json:"status"`
 	CreateTime datetime.Datetime `json:"createTime"`
+	IsBind     bool              `json:"isBind" grom:"-"`
 }
 
 // 菜单详情

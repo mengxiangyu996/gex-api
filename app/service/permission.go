@@ -89,7 +89,7 @@ func (*Permission) GetListByIds(ids []int) []*response.PermissionList {
 
 	list := make([]*response.PermissionList, 0)
 
-	dal.Gorm.Model(&model.Permission{}).Where("id in ?", ids).Scan(&list)
+	dal.Gorm.Model(&model.Permission{}).Where("id in ?", ids).Order("group_name").Scan(&list)
 
 	return list
 }
