@@ -1,6 +1,7 @@
 package upload
 
 import (
+	"encoding/base64"
 	"errors"
 	"gex-api/config"
 	"math/rand"
@@ -222,7 +223,7 @@ func (t *Upload) checkLimitType() error {
 func (t *Upload) generateRandomName() string {
 
 	// 创建一个新的随机数生成器实例
-	r := rand.New(rand.NewSource(int64(len(t.File.FileName))))
+	r := rand.New(rand.NewSource(int64(len(base64.StdEncoding.EncodeToString([]byte(t.File.FileName))))))
 
 	// 定义可能的字符集，包括字母和数字
 	chars := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
