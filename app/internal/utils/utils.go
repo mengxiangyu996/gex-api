@@ -20,9 +20,9 @@ func CheckRegex(expr, content string) bool {
 	return r.MatchString(content)
 }
 
-// 数据是否存在于切片
-// 存在返回true
-// 不存在返回false
+// 比较工具
+// 检查元素item是否存在于切片slice中
+// 如果存在，返回true；如果不存在，返回false
 func Contains[T comparable](slice []T, item T) bool {
 
 	for _, value := range slice {
@@ -36,9 +36,7 @@ func Contains[T comparable](slice []T, item T) bool {
 
 // 过滤器
 // 条件函数返回true，元素会被包含在结果中
-func Filter[T interface{}](slice []T, condition func(T) bool) []T {
-
-	var result []T
+func Filter[T interface{}](slice []T, condition func(T) bool) (result []T) {
 
 	for _, value := range slice {
 		if condition(value) {
