@@ -25,13 +25,28 @@ func CheckRegex(expr, content string) bool {
 // 不存在返回false
 func Contains[T comparable](slice []T, item T) bool {
 
-	for _, v := range slice {
-		if v == item {
+	for _, value := range slice {
+		if value == item {
 			return true
 		}
 	}
 
 	return false
+}
+
+// 过滤器
+// 条件函数返回true，元素会被包含在结果中
+func Filter[T interface{}](slice []T, condition func(T) bool) []T {
+
+	var result []T
+
+	for _, value := range slice {
+		if condition(value) {
+			result = append(result, value)
+		}
+	}
+
+	return result
 }
 
 // 获取授权信息
