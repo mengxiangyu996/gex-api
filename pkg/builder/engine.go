@@ -35,6 +35,7 @@ type Config struct {
 
 // New 初始化并返回一个新的Engine实例
 func New(config *Config) *Engine {
+	
 	// 初始化echo
 	e := echo.New()
 
