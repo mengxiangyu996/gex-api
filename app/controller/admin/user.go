@@ -136,7 +136,7 @@ func (*User) Login(ctx *builder.Context) error {
 		Expire: time.Now().AddDate(0, 0, 7),
 	})
 
-	return ctx.Success(&response.Token{
+	return ctx.Success(&response.UserToken{
 		Token: token,
 	})
 }
@@ -144,7 +144,7 @@ func (*User) Login(ctx *builder.Context) error {
 // 后台用户重置密码
 func (*User) ResetPassword(ctx *builder.Context) error {
 
-	id, _ := utils.GetTokenPayload(ctx.GetHeader("Token"))
+	id, _ := utils.ParseTokenPayload(ctx.GetToken())
 
 	var param request.AdminResetPassword
 
@@ -218,7 +218,7 @@ func (*User) Roles(ctx *builder.Context) error {
 // 登录的用户所拥有的菜单列表树
 func (*User) MenuTree(ctx *builder.Context) error {
 
-	id, _ := utils.GetTokenPayload(ctx.GetHeader("Token"))
+	id, _ := utils.ParseTokenPayload(ctx.GetToken())
 
 	roleIds := (&service.User{}).GetBindRole(id)
 
@@ -228,7 +228,7 @@ func (*User) MenuTree(ctx *builder.Context) error {
 		menuIds = append(menuIds, (&service.Role{}).GetBindMenu(roleId)...)
 	}
 
-	list := (&service.Menu{}).GetListByIds(menuIds)
+	list := (&service.Menu{}).GetListByIds(menuIds, true)
 
 	tree := (&service.Menu{}).ListToTree(list, 0)
 

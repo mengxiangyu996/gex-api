@@ -89,7 +89,7 @@ func (*Menu) GetDetailById(id int) *response.MenuDetail {
 }
 
 // 菜单列表
-func (*Menu) GetListByIds(ids []int) []*response.MenuList {
+func (*Menu) GetListByIds(ids []int, isSort bool) []*response.MenuList {
 
 	list := make([]*response.MenuList, 0)
 
@@ -97,6 +97,10 @@ func (*Menu) GetListByIds(ids []int) []*response.MenuList {
 
 	if len(ids) > 0 {
 		query.Where("id in ?", ids)
+	}
+
+	if isSort {
+		query.Order("sort")
 	}
 
 	query.Scan(&list)

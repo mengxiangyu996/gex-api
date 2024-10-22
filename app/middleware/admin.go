@@ -10,7 +10,7 @@ import (
 func AdminAuthMiddleware(next builder.HandlerFunc) builder.HandlerFunc {
 	return func(ctx *builder.Context) error {
 
-		id, err := utils.GetTokenPayload(ctx.GetHeader("Token"))
+		id, err := utils.ParseTokenPayload(ctx.GetToken())
 		if err != nil {
 			return ctx.Json(10401, err.Error())
 		}

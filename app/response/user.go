@@ -2,6 +2,11 @@ package response
 
 import "gex-api/pkg/datetime"
 
+// Token 授权响应体
+type UserToken struct {
+	Token string `json:"token"`
+}
+
 // 用户列表
 type UserList struct {
 	Id         int               `json:"id"`

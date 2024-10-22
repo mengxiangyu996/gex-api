@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"reflect"
+	"strings"
 
 	"github.com/labstack/echo"
 )
@@ -295,6 +296,8 @@ func (t *Context) BindX(i interface{}) error {
 
 // Success 发送成功响应，带有自定义消息和可选数据
 //
+// 第一个参数为string类型时，默认为返回的message
+//
 // Success("ok")
 //
 // Success(map[string]interface{}{ "date": "2006-01-02 15:04:05" })
@@ -323,10 +326,12 @@ func (t *Context) Success(arg ...interface{}) error {
 		message = "success"
 	}
 
-	return t.JSON(200, json(10200, message, data))
+	return t.JSON(200, json(SUCCESS_STATUS, message, data))
 }
 
 // Fail 发送失败响应，带有自定义消息和可选数据
+//
+// 第一个参数为string类型时，默认为返回的message
 //
 // Fail("fail")
 //
@@ -356,10 +361,36 @@ func (t *Context) Fail(arg ...interface{}) error {
 		message = "fail"
 	}
 
-	return t.JSON(200, json(10500, message, data))
+	return t.JSON(200, json(FAIL_STATUS, message, data))
 }
 
 // Json 发送json响应，带有自定义消息和可选数据
-func (t *Context) Json(code int, message string, data ...interface{}) error {
+func (t *Context) Json(code int, message string, arg ...interface{}) error {
+
+	var data interface{}
+
+	if len(arg) > 0 {
+		data = arg[0]
+	}
+
 	return t.JSON(200, json(code, message, data))
+}
+
+// GetToken 返回授权信息
+func (t *Context) GetToken() string {
+
+	var token string
+
+	token = t.GetHeader("Authorization")
+
+	if token != "" {
+		parts := strings.Split(token, " ")
+		if len(parts) == 2 {
+			return parts[1]
+		}
+	}
+
+	token = t.QueryParam("token")
+
+	return token
 }

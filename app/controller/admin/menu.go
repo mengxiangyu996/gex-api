@@ -68,7 +68,7 @@ func (*Menu) Delete(ctx *builder.Context) error {
 // 菜单列表树
 func (*Menu) Tree(ctx *builder.Context) error {
 
-	list := (&service.Menu{}).GetListByIds(nil)
+	list := (&service.Menu{}).GetListByIds(nil, false)
 
 	tree := (&service.Menu{}).ListToTree(list, 0)
 

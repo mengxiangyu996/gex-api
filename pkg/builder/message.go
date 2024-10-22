@@ -1,5 +1,11 @@
 package builder
 
+// 状态码
+const (
+	SUCCESS_STATUS = 10200
+	FAIL_STATUS    = 10500
+)
+
 type Message struct {
 	Code    int         `json:"code"`
 	Message string      `json:"message"`

@@ -67,9 +67,9 @@ func Desensitize(content string, start, end int) string {
 	return string(contentRune)
 }
 
-// 获取授权信息
-func GetTokenPayload(token string) (int, error) {
-	
+// 解析token获取信息
+func ParseTokenPayload(token string) (int, error) {
+
 	if token == "" {
 		return 0, errors.New("未授权")
 	}

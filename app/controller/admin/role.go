@@ -125,7 +125,7 @@ func (*Role) Menus(ctx *builder.Context) error {
 		return ctx.Fail(err.Error())
 	}
 
-	menus := (&service.Menu{}).GetListByIds(nil)
+	menus := (&service.Menu{}).GetListByIds(nil, false)
 	menuIds := (&service.Role{}).GetBindMenu(param.Id)
 
 	for _, menu := range menus {
