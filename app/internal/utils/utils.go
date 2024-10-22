@@ -47,6 +47,26 @@ func Filter[T interface{}](slice []T, condition func(T) bool) (result []T) {
 	return result
 }
 
+// 脱敏工具
+func Desensitize(content string, start, end int) string {
+
+	if start < 0 || end < 0 || start > end {
+		return content
+	}
+
+	var contentRune []rune
+
+	for key, value := range content {
+		if key >= start && key <= end {
+			contentRune = append(contentRune, '*')
+		} else {
+			contentRune = append(contentRune, value)
+		}
+	}
+
+	return string(contentRune)
+}
+
 // 获取授权信息
 func GetTokenPayload(token string) (int, error) {
 	
