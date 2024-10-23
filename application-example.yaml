@@ -1,0 +1,73 @@
+# 项目相关配置
+ruoyi:
+  # 名称
+  name: RuoYi
+  # 版本
+  version: 3.8.8
+  # 版权年份
+  copyrightYear: 2024
+  # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
+  profile: D:/ruoyi/uploadPath
+  # 获取ip地址开关
+  addressEnabled: false
+  # 验证码类型 math 数字计算 char 字符验证
+  captchaType: math
+
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为8080
+  port: 8080
+
+# 数据库配置
+mysql:
+  # 地址
+  host: localhost
+  # 端口，默认为3306
+  port: 3306
+  # 数据库名称
+  database: ruoyi
+  # 用户名
+  username: root
+  # 密码
+  password: root
+  # 编码
+  charset: utf8mb4
+  # 连接池最大连接数
+  maxIdleConns: 10
+  # 连接池最大打开连接数
+  maxOpenConns: 100
+
+# redis配置
+redis:
+  # 地址
+  host: localhost
+  # 端口，默认为6379
+  port: 6379
+  # 数据库索引
+  database: 0
+  # 密码
+  password:
+
+# token配置
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌有效期（默认30分钟）
+  expireTime: 30
+
+# 用户配置
+user:
+  password:
+    # 密码最大错误次数
+    maxRetryCount: 5
+    # 密码锁定时间（默认10分钟）
+    lockTime: 10
+
+# Swagger配置
+swagger:
+  # 是否开启swagger
+  enabled: true
+  # 请求前缀
+  pathMapping: /dev-api

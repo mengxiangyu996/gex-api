@@ -1,0 +1,41 @@
+package main
+
+import (
+	"ruoyi-go/config"
+	"ruoyi-go/framework/dal"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+)
+
+func main() {
+
+	// 初始化配置文件
+	config.InitConfig()
+
+	// dsn := "user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := config.Data.Mysql.Username + ":" + config.Data.Mysql.Password + "@tcp(" + config.Data.Mysql.Host + ":" + strconv.Itoa(config.Data.Mysql.Port) + ")/" + config.Data.Mysql.Database + "?charset=" + config.Data.Mysql.Charset + "&parseTime=True&loc=Local"
+
+	// 初始化数据访问层
+	dal.InitDal(&dal.Config{
+		GomrConfig: &dal.GomrConfig{
+			Dialector:    mysql.Open(dsn),
+			Opts:         &gorm.Config{},
+			MaxOpenConns: config.Data.Mysql.MaxOpenConns,
+			MaxIdleConns: config.Data.Mysql.MaxIdleConns,
+		},
+	})
+
+	// 设置模式
+	gin.SetMode(config.Data.Server.Mode)
+
+	// 初始化gin
+	server := gin.New()
+
+	// 注册恢复中间件
+	server.Use(gin.Recovery())
+
+	server.Run(":" + strconv.Itoa(config.Data.Server.Port))
+}
