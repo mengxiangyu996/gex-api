@@ -1,7 +1,7 @@
 package builder
 
 // 状态码
-const (
+var (
 	SUCCESS_STATUS = 10200
 	FAIL_STATUS    = 10500
 )
