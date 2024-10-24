@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"ruoyi-go/config"
 	"ruoyi-go/framework/dal"
 	"strconv"
@@ -8,6 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 )
 
 func main() {
@@ -21,8 +24,16 @@ func main() {
 	// 初始化数据访问层
 	dal.InitDal(&dal.Config{
 		GomrConfig: &dal.GomrConfig{
-			Dialector:    mysql.Open(dsn),
-			Opts:         &gorm.Config{},
+			Dialector: mysql.Open(dsn),
+			Opts: &gorm.Config{
+				SkipDefaultTransaction: true, // 跳过默认事务
+				NamingStrategy: schema.NamingStrategy{
+					SingularTable: true,
+				},
+				Logger: logger.New(log.Default(), logger.Config{
+					LogLevel: logger.Silent, // 不打印日志
+				}),
+			},
 			MaxOpenConns: config.Data.Mysql.MaxOpenConns,
 			MaxIdleConns: config.Data.Mysql.MaxIdleConns,
 		},
