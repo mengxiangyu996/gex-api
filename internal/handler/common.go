@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"ruoyi-go/pkg/response"
+	"ruoyi-go/framework/response"
 	"ruoyi-go/utils/captcha"
 	"strings"
 

@@ -35,9 +35,9 @@ func NewCaptcha() *Captcha {
 
 // 生成验证码
 // uuid, base64, answer
-func (t *Captcha) Generate() (string, string) {
+func (c *Captcha) Generate() (string, string) {
 
-	id, b64s, _, err := t.captcha.Generate()
+	id, b64s, _, err := c.captcha.Generate()
 	if err != nil {
 		return "", ""
 	}
@@ -46,6 +46,6 @@ func (t *Captcha) Generate() (string, string) {
 }
 
 // 验证验证码
-func (t *Captcha) Verify(id, answer string) bool {
-	return t.captcha.Verify(id, answer, true)
+func (c *Captcha) Verify(id, answer string) bool {
+	return c.captcha.Verify(id, answer, true)
 }

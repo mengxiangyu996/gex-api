@@ -1,6 +1,6 @@
 package model
 
-import "ruoyi-go/pkg/datetime"
+import "ruoyi-go/framework/datetime"
 
 // 岗位信息
 type SysPost struct {

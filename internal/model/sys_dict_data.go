@@ -1,6 +1,6 @@
 package model
 
-import "ruoyi-go/pkg/datetime"
+import "ruoyi-go/framework/datetime"
 
 // 字典数据
 type SysDictData struct {

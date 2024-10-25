@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 	"ruoyi-go/config"
+	"ruoyi-go/framework/dal"
 	"ruoyi-go/internal/router"
-	"ruoyi-go/pkg/dal"
 	"strconv"
 
 	"github.com/gin-gonic/gin"

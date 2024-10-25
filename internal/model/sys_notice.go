@@ -1,6 +1,6 @@
 package model
 
-import "ruoyi-go/pkg/datetime"
+import "ruoyi-go/framework/datetime"
 
 // 通知公告
 type SysNotice struct {

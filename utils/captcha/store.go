@@ -2,7 +2,7 @@ package captcha
 
 import (
 	"context"
-	"ruoyi-go/pkg/dal"
+	"ruoyi-go/framework/dal"
 	"time"
 )
 

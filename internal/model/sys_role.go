@@ -1,7 +1,7 @@
 package model
 
 import (
-	"ruoyi-go/pkg/datetime"
+	"ruoyi-go/framework/datetime"
 
 	"gorm.io/gorm"
 )
