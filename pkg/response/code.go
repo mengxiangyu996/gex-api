@@ -1,7 +1,7 @@
 package response
 
 // 响应码
-var (
+const (
 	SUCCESS      = 200
 	ERROR        = 500
 	UNAUTHORIZED = 401

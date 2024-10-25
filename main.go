@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"ruoyi-go/config"
+	"ruoyi-go/internal/router"
 	"ruoyi-go/pkg/dal"
 	"strconv"
 
@@ -37,6 +38,12 @@ func main() {
 			MaxOpenConns: config.Data.Mysql.MaxOpenConns,
 			MaxIdleConns: config.Data.Mysql.MaxIdleConns,
 		},
+		RedisConfig: &dal.RedisConfig{
+			Host:     config.Data.Redis.Host,
+			Port:     config.Data.Redis.Port,
+			Database: config.Data.Redis.Database,
+			Password: config.Data.Redis.Password,
+		},
 	})
 
 	// 设置模式
@@ -47,6 +54,9 @@ func main() {
 
 	// 注册恢复中间件
 	server.Use(gin.Recovery())
+
+	// 注册路由
+	router.AdminApi(server)
 
 	server.Run(":" + strconv.Itoa(config.Data.Server.Port))
 }

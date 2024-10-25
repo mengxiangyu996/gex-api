@@ -17,6 +17,8 @@ ruoyi:
 server:
   # 服务器的HTTP端口，默认为8080
   port: 8080
+  # 模式，可选值：debug、release、test
+  mode: debug
 
 # 数据库配置
 mysql:
