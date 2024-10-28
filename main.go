@@ -4,7 +4,7 @@ import (
 	"log"
 	"ruoyi-go/config"
 	"ruoyi-go/framework/dal"
-	"ruoyi-go/internal/router"
+	"ruoyi-go/router"
 	"strconv"
 
 	"github.com/gin-gonic/gin"

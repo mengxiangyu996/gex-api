@@ -2,13 +2,13 @@ package captcha
 
 import (
 	"context"
+	"ruoyi-go/constant"
 	"ruoyi-go/framework/dal"
 	"time"
 )
 
 type store struct{}
 
-const SystemCaptcha = "system:captcha:" // 系统验证码，"system:captcha:uuid"
 
 func NewStore() *store {
 	return &store{}
@@ -17,7 +17,7 @@ func NewStore() *store {
 // 设置验证码
 func (s *store) Set(id string, value string) error {
 
-	key := SystemCaptcha + id
+	key := constant.SystemCaptcha + id
 
 	return dal.Redis.Set(context.Background(), key, value, time.Minute*2).Err()
 }
@@ -25,7 +25,7 @@ func (s *store) Set(id string, value string) error {
 // 获取验证码
 func (s *store) Get(id string, clear bool) string {
 
-	key := SystemCaptcha + id
+	key := constant.SystemCaptcha + id
 
 	captcha := dal.Redis.Get(context.Background(), key).String()
 

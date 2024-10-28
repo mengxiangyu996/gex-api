@@ -1,4 +1,4 @@
-package response
+package message
 
 // 响应码
 const (

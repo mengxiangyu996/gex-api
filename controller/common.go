@@ -1,8 +1,8 @@
-package handler
+package controller
 
 import (
-	"ruoyi-go/framework/response"
-	"ruoyi-go/utils/captcha"
+	"ruoyi-go/framework/message"
+	"ruoyi-go/internal/captcha"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +18,7 @@ func (c *Common) CaptchaImage(ctx *gin.Context) {
 	// 由前端拼接，this.codeUrl = "data:image/gif;base64," + res.img;
 	b64s = strings.Split(b64s, "base64,")[1]
 
-	response.Success(ctx, map[string]interface{}{
+	message.Success(ctx, map[string]interface{}{
 		"uuid":           uuid,
 		"img":            b64s,
 		"captchaEnabled": true,
