@@ -2,7 +2,7 @@ package ip
 
 import (
 	"encoding/json"
-	httputils "ruoyi-go/utils/http-utils"
+	"ruoyi-go/utils/curl"
 )
 
 var IpUrl = "http://whois.pconline.com.cn/ipJson.jsp"
@@ -21,9 +21,9 @@ type IpAddress struct {
 // 获取地址
 func GetAddress(ip string) *IpAddress {
 
-	request := httputils.DefaultClient()
+	request := curl.DefaultClient()
 
-	body, err := request.Send(&httputils.RequestParam{
+	body, err := request.Send(&curl.RequestParam{
 		Url: IpUrl,
 		Query: map[string]interface{}{
 			"ip":   ip,

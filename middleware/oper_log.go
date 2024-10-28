@@ -5,7 +5,7 @@ import (
 	logfactory "ruoyi-go/internal/log-factory"
 	responsewriter "ruoyi-go/internal/response-writer"
 	"ruoyi-go/request"
-	iputils "ruoyi-go/utils/ip-utils"
+	"ruoyi-go/utils/ip"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +17,7 @@ func OperLog() gin.HandlerFunc {
 
 		startTime := time.Now()
 
-		ipAddress := iputils.GetAddress(ctx.ClientIP())
+		ipAddress := ip.GetAddress(ctx.ClientIP())
 
 		// 创建操作日志工厂实例
 		operateLogFactory := logfactory.OperateLogFactory{}
