@@ -2,10 +2,15 @@ package ip
 
 import (
 	"encoding/json"
+	"net"
+	"ruoyi-go/constant"
+	"ruoyi-go/utils"
 	"ruoyi-go/utils/curl"
 )
 
-var IpUrl = "http://whois.pconline.com.cn/ipJson.jsp"
+var (
+	unknown = "未知地址"
+)
 
 type IpAddress struct {
 	Ip         string `json:"ip"`
@@ -21,10 +26,24 @@ type IpAddress struct {
 // 获取地址
 func GetAddress(ip string) *IpAddress {
 
+	if netIp := net.ParseIP(ip); netIp == nil || netIp.IsLoopback() {
+		return &IpAddress{
+			Ip:   ip,
+			Addr: unknown,
+		}
+	}
+
+	if utils.CheckRegex(constant.InternalIp, ip) {
+		return &IpAddress{
+			Ip:   ip,
+			Addr: "内网地址",
+		}
+	}
+
 	request := curl.DefaultClient()
 
 	body, err := request.Send(&curl.RequestParam{
-		Url: IpUrl,
+		Url: constant.IPUrl,
 		Query: map[string]interface{}{
 			"ip":   ip,
 			"json": true,
@@ -35,13 +54,13 @@ func GetAddress(ip string) *IpAddress {
 
 	if err != nil {
 		ipAddress.Ip = ip
-		ipAddress.Addr = "未知地址"
+		ipAddress.Addr = unknown
 		return &ipAddress
 	}
 
 	if err := json.Unmarshal([]byte(body), &ipAddress); err != nil {
 		ipAddress.Ip = ip
-		ipAddress.Addr = "未知地址"
+		ipAddress.Addr = unknown
 		return &ipAddress
 	}
 
