@@ -11,7 +11,7 @@ import (
 type Common struct{}
 
 // 生成验证码
-func (c *Common) CaptchaImage(ctx *gin.Context) {
+func (c *Common) Captcha(ctx *gin.Context) {
 
 	uuid, b64s := captcha.NewCaptcha().Generate()
 

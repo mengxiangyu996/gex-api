@@ -2,9 +2,9 @@ package main
 
 import (
 	"log"
+	"ruoyi-go/app/router"
 	"ruoyi-go/config"
 	"ruoyi-go/framework/dal"
-	"ruoyi-go/router"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -38,12 +38,12 @@ func main() {
 			MaxOpenConns: config.Data.Mysql.MaxOpenConns,
 			MaxIdleConns: config.Data.Mysql.MaxIdleConns,
 		},
-		RedisConfig: &dal.RedisConfig{
-			Host:     config.Data.Redis.Host,
-			Port:     config.Data.Redis.Port,
-			Database: config.Data.Redis.Database,
-			Password: config.Data.Redis.Password,
-		},
+		// RedisConfig: &dal.RedisConfig{
+		// 	Host:     config.Data.Redis.Host,
+		// 	Port:     config.Data.Redis.Port,
+		// 	Database: config.Data.Redis.Database,
+		// 	Password: config.Data.Redis.Password,
+		// },
 	})
 
 	// 设置模式

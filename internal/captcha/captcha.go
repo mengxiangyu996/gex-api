@@ -14,7 +14,8 @@ type Captcha struct {
 // 创建验证码对象
 func NewCaptcha() *Captcha {
 
-	store := NewStore()
+	// store := NewStore()
+	store := base64Captcha.DefaultMemStore
 
 	var driver base64Captcha.Driver
 

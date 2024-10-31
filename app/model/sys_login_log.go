@@ -3,7 +3,7 @@ package model
 import "ruoyi-go/framework/datetime"
 
 // 系统访问记录
-type SysLogininfor struct {
+type SysLoginLog struct {
 	InfoId        int `gorm:"autoIncrement"`
 	UserName      string
 	Ipaddr        string
@@ -15,6 +15,6 @@ type SysLogininfor struct {
 	LoginTime     datetime.Datetime `gorm:"autoCreateTime"`
 }
 
-func (SysLogininfor) TableName() string {
-	return "sys_logininfor"
+func (SysLoginLog) TableName() string {
+	return "sys_login_log"
 }
