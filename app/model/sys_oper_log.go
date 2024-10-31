@@ -6,10 +6,10 @@ import "ruoyi-go/framework/datetime"
 type SysOperLog struct {
 	OperId        int `gorm:"autoIncrement"`
 	Title         string
-	BusinessType  int `gorm:"default:0"`
+	BusinessType  string `gorm:"default:0"`
 	Method        string
 	RequestMethod string
-	OperatorType  int `gorm:"default:0"`
+	OperatorType  string `gorm:"default:0"`
 	OperName      string
 	DeptName      string
 	OperUrl       string

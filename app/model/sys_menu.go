@@ -12,13 +12,13 @@ type SysMenu struct {
 	Component  string
 	Query      string
 	RouteName  string
-	IsFrame    int `gorm:"default:1"`
-	IsCache    int `gorm:"default:0"`
+	IsFrame    string `gorm:"default:1"`
+	IsCache    string `gorm:"default:0"`
 	MenuType   string
-	Visible    string `gorm:"default:'0'"`
-	Status     string `gorm:"default:'0'"`
+	Visible    string `gorm:"default:0"`
+	Status     string `gorm:"default:0"`
 	Perms      string
-	Icon       string `gorm:"default:'#'"`
+	Icon       string `gorm:"default:#'"`
 	CreateBy   string
 	CreateTime datetime.Datetime `gorm:"autoCreateTime"`
 	UpdateBy   string

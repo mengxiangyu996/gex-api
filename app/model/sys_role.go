@@ -11,10 +11,10 @@ type SysRole struct {
 	RoleId            int `gorm:"autoIncrement"`
 	RoleName          string
 	RoleKey           string
-	RoleSort          int    `gorm:"default:0"`
+	RoleSort          string `gorm:"default:0"`
 	DataScope         string `gorm:"default:1"`
-	MenuCheckStrictly int    `gorm:"default:1"`
-	DeptCheckStrictly int    `gorm:"default:1"`
+	MenuCheckStrictly string `gorm:"default:1"`
+	DeptCheckStrictly string `gorm:"default:1"`
 	Status            string `gorm:"default:0"`
 	CreateBy          string
 	CreateTime        datetime.Datetime `gorm:"autoCreateTime"`
