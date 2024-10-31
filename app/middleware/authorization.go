@@ -13,7 +13,7 @@ func Authorization() gin.HandlerFunc {
 
 		userClaims, err := token.ParseToken(ctx)
 		if err != nil {
-			message.Error(ctx, err.Error())
+			message.Error(ctx, 401, err.Error())
 			ctx.Abort()
 			return
 		}

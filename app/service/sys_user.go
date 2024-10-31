@@ -17,3 +17,13 @@ func (*SysUser) GetDetailByUserName(userName string) *response.SysUserDetail {
 
 	return &detail
 }
+
+// 根据用户id获取用户详情
+func (*SysUser) GetDetailById(userId int) *response.SysUserDetail {
+
+	var detail response.SysUserDetail
+
+	dal.Gorm.Model(&model.SysUser{}).Where("user_id = ?", userId).Take(&detail)
+
+	return &detail
+}
