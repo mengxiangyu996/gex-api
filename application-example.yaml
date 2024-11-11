@@ -58,18 +58,3 @@ token:
   secret: abcdefghijklmnopqrstuvwxyz
   # 令牌有效期（默认30分钟）
   expireTime: 30
-
-# 用户配置
-user:
-  password:
-    # 密码最大错误次数
-    maxRetryCount: 5
-    # 密码锁定时间（默认10分钟）
-    lockTime: 10
-
-# Swagger配置
-swagger:
-  # 是否开启swagger
-  enabled: true
-  # 请求前缀
-  pathMapping: /dev-api

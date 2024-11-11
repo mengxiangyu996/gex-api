@@ -38,10 +38,10 @@ func GetClaims(user *response.SysUserDetail) *UserClaims {
 		Sex:         user.Sex,
 		Avatar:      user.Avatar,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)), // 过期时间，默认24小时
-			IssuedAt:  jwt.NewNumericDate(time.Now()),                     // 签发时间
-			NotBefore: jwt.NewNumericDate(time.Now()),                     // 生效时间
-			Issuer:    "ruoyi-go",                                         // 签发人
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * time.Duration(config.Data.Token.ExpireTime))), // 过期时间，默认30分钟
+			IssuedAt:  jwt.NewNumericDate(time.Now()),                                                                // 签发时间
+			NotBefore: jwt.NewNumericDate(time.Now()),                                                                // 生效时间
+			Issuer:    "ruoyi-go",                                                                                    // 签发人
 		},
 	}
 }
