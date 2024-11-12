@@ -1,10 +1,10 @@
 package main
 
 import (
+	"isme-go/app/router"
+	"isme-go/config"
+	"isme-go/framework/dal"
 	"log"
-	"ruoyi-go/app/router"
-	"ruoyi-go/config"
-	"ruoyi-go/framework/dal"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -47,7 +47,7 @@ func main() {
 	})
 
 	// 设置模式
-	gin.SetMode(config.Data.Server.Mode)
+	gin.SetMode(config.Data.App.Server.Mode)
 
 	// 初始化gin
 	server := gin.New()
@@ -56,7 +56,7 @@ func main() {
 	server.Use(gin.Recovery())
 
 	// 注册路由
-	router.AdminApi(server)
+	router.ApiRegister(server)
 
-	server.Run(":" + strconv.Itoa(config.Data.Server.Port))
+	server.Run(":" + strconv.Itoa(config.Data.App.Server.Port))
 }

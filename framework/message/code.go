@@ -1,17 +1,15 @@
 package message
 
-// 响应码
 const (
-	SUCCESS      = 200
-	ERROR        = 500
-	UNAUTHORIZED = 401
+	SUCCESS        = 0
+	ERROR_CODE     = 10500
+	ERROR_CODE_401 = 401
 )
 
-// 响应消息
 var message = map[int]string{
-	SUCCESS:      "操作成功",
-	ERROR:        "操作失败",
-	UNAUTHORIZED: "未授权",
+	SUCCESS:        "OK",
+	ERROR_CODE:     "FAILED",
+	ERROR_CODE_401: "登录已过期",
 }
 
 func getMessage(code int) string {

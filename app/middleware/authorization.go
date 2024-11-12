@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"ruoyi-go/app/token"
-	"ruoyi-go/framework/message"
+	"isme-go/app/token"
+	"isme-go/framework/message"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,8 +18,8 @@ func Authorization() gin.HandlerFunc {
 			return
 		}
 
-		ctx.Set("userId", userClaims.UserId)
-		ctx.Set("userName", userClaims.UserName)
+		ctx.Set("userId", userClaims.Id)
+		ctx.Set("username", userClaims.Username)
 
 		ctx.Next()
 	}

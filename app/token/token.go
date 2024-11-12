@@ -2,8 +2,8 @@ package token
 
 import (
 	"errors"
-	"ruoyi-go/app/response"
-	"ruoyi-go/config"
+	"isme-go/app/response"
+	"isme-go/config"
 	"strings"
 	"time"
 
@@ -13,35 +13,22 @@ import (
 
 // 用户声明
 type UserClaims struct {
-	UserId      int
-	DeptId      int
-	UserName    string
-	NickName    string
-	UserType    string
-	Email       string
-	Phonenumber string
-	Sex         string
-	Avatar      string
+	Id       int
+	Username string
 	jwt.RegisteredClaims
 }
 
 // 获取用户声明
-func GetClaims(user *response.SysUserDetail) *UserClaims {
+func GetClaims(user response.UserToken) *UserClaims {
 	return &UserClaims{
-		UserId:      user.UserId,
-		DeptId:      user.DeptId,
-		UserName:    user.UserName,
-		NickName:    user.NickName,
-		UserType:    user.UserType,
-		Email:       user.Email,
-		Phonenumber: user.Phonenumber,
-		Sex:         user.Sex,
-		Avatar:      user.Avatar,
+		Id:       user.Id,
+		Username: user.Username,
+
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * time.Duration(config.Data.Token.ExpireTime))), // 过期时间，默认30分钟
 			IssuedAt:  jwt.NewNumericDate(time.Now()),                                                                // 签发时间
 			NotBefore: jwt.NewNumericDate(time.Now()),                                                                // 生效时间
-			Issuer:    "ruoyi-go",                                                                                    // 签发人
+			Issuer:    "isme-go",                                                                                     // 签发人
 		},
 	}
 }

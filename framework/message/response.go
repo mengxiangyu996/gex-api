@@ -14,17 +14,17 @@ func Success(c *gin.Context, args ...interface{}) {
 
 	response := gin.H{
 		"code": code,
-		"msg":  msg,
+		"message":  msg,
 	}
 
 	for _, arg := range args {
 		if v, ok := arg.(int); ok {
 			response["code"] = v
-			response["msg"] = getMessage(v)
+			response["message"] = getMessage(v)
 		}
 
 		if v, ok := arg.(string); ok {
-			response["msg"] = v
+			response["message"] = v
 		}
 
 		if v, ok := arg.(map[string]interface{}); ok {
@@ -40,22 +40,22 @@ func Success(c *gin.Context, args ...interface{}) {
 // 失败响应
 func Error(c *gin.Context, args ...interface{}) {
 
-	code := ERROR
+	code := ERROR_CODE
 	msg := getMessage(code)
 
 	response := gin.H{
 		"code": code,
-		"msg":  msg,
+		"message":  msg,
 	}
 
 	for _, arg := range args {
 		if v, ok := arg.(int); ok {
 			response["code"] = v
-			response["msg"] = getMessage(v)
+			response["message"] = getMessage(v)
 		}
 
 		if v, ok := arg.(string); ok {
-			response["msg"] = v
+			response["message"] = v
 		}
 
 		if v, ok := arg.(map[string]interface{}); ok {

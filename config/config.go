@@ -3,26 +3,20 @@ package config
 import (
 	"os"
 
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 // 项目配置
 type config struct {
 	// 项目相关配置
-	RuoYi struct {
-		Name           string `yaml:"name"`           // 名称
-		Version        string `yaml:"version"`        // 版本
-		CopyrightYear  int    `yaml:"copyrightYear"`  // 版权年份
-		Profile        string `yaml:"profile"`        // 文件路径
-		AddressEnabled bool   `yaml:"addressEnabled"` // 获取ip地址开关
-		CaptchaType    string `yaml:"captchaType"`    // 验证码类型
-	}
-
-	// 开发环境配置
-	Server struct {
-		Port int    `yaml:"port"` // 服务器的HTTP端口
-		Mode string `yaml:"mode"` // 模式
-	}
+	App struct {
+		Name string `yaml:"name"` // 名称
+		// 开发环境配置
+		Server struct {
+			Port int    `yaml:"port"` // 服务器的HTTP端口
+			Mode string `yaml:"mode"` // 模式
+		} `yaml:"server"`
+	} `yaml:"app"`
 
 	// 数据库配置
 	Mysql struct {
@@ -50,20 +44,6 @@ type config struct {
 		Secret     string `yaml:"secret"`     // 令牌密钥
 		ExpireTime int    `yaml:"expireTime"` // 令牌有效期
 	}
-
-	// 用户配置
-	User struct {
-		Password struct {
-			MaxRetryCount int `yaml:"maxRetryCount"` // 密码最大错误次数
-			LockTime      int `yaml:"lockTime"`      // 密码锁定时间
-		} `yaml:"password"`
-	}
-
-	// swagger配置
-	Swagger struct {
-		Enabled     bool   `yaml:"enabled"`     // 是否开启swagger
-		PathMapping string `yaml:"pathMapping"` // 请求前缀
-	} `yaml:"swagger"`
 }
 
 var Data *config
