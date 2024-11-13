@@ -2,6 +2,7 @@ package service
 
 import (
 	"isme-go/app/model"
+	"isme-go/app/request"
 	"isme-go/framework/dal"
 )
 
@@ -18,9 +19,24 @@ func (*UserRolesRole) GetRoleIdsByUserId(userId int) []int {
 }
 
 // 添加用户角色
-func (*UserRolesRole) Insert(userId int, roleId int) error {
-	return dal.Gorm.Model(&model.UserRolesRole{}).Create(&model.UserRolesRole{
-		UserId: userId,
-		RoleId: roleId,
-	}).Error
+func (*UserRolesRole) Insert(param request.RoleUsersAdd) error {
+
+	query := dal.Gorm.Begin()
+
+	for _, userId := range param.UserIds {
+		if err := query.Create(&model.UserRolesRole{
+			UserId: userId,
+			RoleId: param.RoleId,
+		}).Error; err != nil {
+			query.Rollback()
+			return err
+		}
+	}
+
+	return query.Commit().Error
+}
+
+// 取消分配角色-批量
+func (*UserRolesRole) Delete(param request.RoleUsersRemove) error {
+	return dal.Gorm.Model(&model.UserRolesRole{}).Where("user_id in ? AND role_id = ?", param.UserIds, param.RoleId).Delete(nil).Error
 }

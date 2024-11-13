@@ -9,6 +9,16 @@ import (
 
 type Role struct{}
 
+// 获取角色详情
+func (*Role) GetDetailById(id int) response.Role {
+
+	var role response.Role
+
+	dal.Gorm.Model(&model.Role{}).Where("id = ?", id).Take(&role)
+
+	return role
+}
+
 // 获取角色列表
 func (*Role) GetListByIds(ids []int, enable bool) []response.Role {
 
@@ -69,20 +79,15 @@ func (*Role) List() []response.Role {
 // 添加角色
 func (*Role) Insert(param request.RoleAdd) error {
 
-	enable := 0
-	if param.Enable {
-		enable = 1
-	}
-
 	role := model.Role{
 		Code:   param.Code,
 		Name:   param.Name,
-		Enable: enable,
+		Enable: param.Enable,
 	}
 
 	query := dal.Gorm.Begin()
 
-	if err := query.Model(&model.Role{}).Create(&role).Error; err != nil {
+	if err := query.Model(&model.Role{}).Select("enable").Create(&role).Error; err != nil {
 		query.Rollback()
 		return err
 	}
@@ -103,15 +108,10 @@ func (*Role) Insert(param request.RoleAdd) error {
 // 修改角色
 func (*Role) Update(param request.RoleUpdate) error {
 
-	enable := 0
-	if param.Enable {
-		enable = 1
-	}
-
 	role := model.Role{
 		Id:     param.Id,
 		Name:   param.Name,
-		Enable: enable,
+		Enable: param.Enable,
 	}
 
 	query := dal.Gorm.Begin()
@@ -134,6 +134,24 @@ func (*Role) Update(param request.RoleUpdate) error {
 			query.Rollback()
 			return err
 		}
+	}
+
+	return query.Commit().Error
+}
+
+// 删除角色
+func (*Role) Delete(id int) error {
+
+	query := dal.Gorm.Begin()
+
+	if err := query.Model(&model.Role{}).Where("id = ?", id).Delete(nil).Error; err != nil {
+		query.Rollback()
+		return err
+	}
+
+	if err := query.Model(&model.RolePermissionsPermission{}).Where("role_id = ?", id).Delete(nil).Error; err != nil {
+		query.Rollback()
+		return err
 	}
 
 	return query.Commit().Error

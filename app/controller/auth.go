@@ -56,6 +56,10 @@ func (*Auth) Login(ctx *gin.Context) {
 	}
 
 	user := (&service.User{}).GetDetailByUsername(param.Username)
+	if !user.Enable {
+		message.Error(ctx, "用户已禁用")
+		return
+	}
 
 	if !password.Verify(user.Password, param.Password) {
 		message.Error(ctx, "用户名或密码错误")

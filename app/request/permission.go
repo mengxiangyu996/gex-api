@@ -17,3 +17,8 @@ type PermissionAdd struct {
 	Enable      bool   `json:"enable"`
 	Order       int    `json:"order"`
 }
+
+type PermissionUpdate struct {
+	PermissionAdd
+	Id int `json:"id"`
+}

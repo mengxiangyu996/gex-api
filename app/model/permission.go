@@ -11,10 +11,10 @@ type Permission struct {
 	Icon        string
 	Component   string
 	Layout      string
-	KeepAlive   int
+	KeepAlive   bool
 	Method      string
 	Description string
-	Show        int
-	Enable      int
+	Show        bool
+	Enable      bool
 	Order       int
 }

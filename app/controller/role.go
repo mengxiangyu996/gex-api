@@ -5,6 +5,7 @@ import (
 	"isme-go/app/response"
 	"isme-go/app/service"
 	"isme-go/framework/message"
+	"isme-go/utils"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -20,6 +21,10 @@ func (*Role) PermissionsTree(ctx *gin.Context) {
 	roleIds := (&service.UserRolesRole{}).GetRoleIdsByUserId(userId)
 
 	permissionIds := (&service.RolePermissionsPermission{}).GetPermissionIdsByRoleIds(roleIds)
+
+	if utils.Contains(roleIds, 1) {
+		permissionIds = []int{}
+	}
 
 	permissions := (&service.Permission{}).GetListByIds(permissionIds, true)
 
@@ -99,8 +104,6 @@ func (*Role) Add(ctx *gin.Context) {
 // 修改角色
 func (*Role) Update(ctx *gin.Context) {
 
-	id, _ := strconv.Atoi(ctx.Param("id"))
-
 	var param request.RoleUpdate
 
 	if err := ctx.Bind(&param); err != nil {
@@ -108,9 +111,75 @@ func (*Role) Update(ctx *gin.Context) {
 		return
 	}
 
-	param.Id = id
+	param.Id, _ = strconv.Atoi(ctx.Param("id"))
+
+	role := (&service.Role{}).GetDetailById(param.Id)
+
+	if role.Code == "SUPER_ADMIN" {
+		message.Error(ctx, "超级管理员角色不能删除")
+		return
+	}
 
 	if err := (&service.Role{}).Update(param); err != nil {
+		message.Error(ctx, err.Error())
+		return
+	}
+
+	message.Success(ctx)
+}
+
+// 删除角色
+func (*Role) Delete(ctx *gin.Context) {
+
+	id, _ := strconv.Atoi(ctx.Param("id"))
+
+	role := (&service.Role{}).GetDetailById(id)
+	if role.Code == "SUPER_ADMIN" {
+		message.Error(ctx, "超级管理员角色不能删除")
+		return
+	}
+
+	if err := (&service.Role{}).Delete(id); err != nil {
+		message.Error(ctx, err.Error())
+		return
+	}
+
+	message.Success(ctx)
+}
+
+// 取消分配角色-批量
+func (*Role) UsersRemove(ctx *gin.Context) {
+
+	var param request.RoleUsersRemove
+
+	if err := ctx.Bind(&param); err != nil {
+		message.Error(ctx, err.Error())
+		return
+	}
+
+	param.RoleId, _ = strconv.Atoi(ctx.Param("id"))
+
+	if err := (&service.UserRolesRole{}).Delete(param); err != nil {
+		message.Error(ctx, err.Error())
+		return
+	}
+
+	message.Success(ctx)
+}
+
+// 分配角色-批量
+func (*Role) UsersAdd(ctx *gin.Context) {
+
+	var param request.RoleUsersAdd
+
+	if err := ctx.Bind(&param); err != nil {
+		message.Error(ctx, err.Error())
+		return
+	}
+
+	param.RoleId, _ = strconv.Atoi(ctx.Param("id"))
+
+	if err := (&service.UserRolesRole{}).Insert(param); err != nil {
 		message.Error(ctx, err.Error())
 		return
 	}

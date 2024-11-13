@@ -4,5 +4,5 @@ type Role struct {
 	Id     int `gorm:"autoIncrement"`
 	Code   string
 	Name   string
-	Enable int
+	Enable bool
 }

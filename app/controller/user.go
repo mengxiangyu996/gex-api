@@ -165,3 +165,49 @@ func (*User) ProfileUpdate(ctx *gin.Context) {
 
 	message.Success(ctx)
 }
+
+// 修改密码
+func (*User) PasswordReset(ctx *gin.Context) {
+
+	var param request.UserUpdate
+
+	if err := ctx.Bind(&param); err != nil {
+		message.Error(ctx, err.Error())
+		return
+	}
+
+	userId, _ := strconv.Atoi(ctx.Param("id"))
+	if userId <= 0 {
+		userId = ctx.GetInt("userId")
+	}
+
+	if err := (&service.User{}).Update(request.UserUpdate{
+		Id:       userId,
+		Password: password.Generate(param.Password),
+	}); err != nil {
+		message.Error(ctx, err.Error())
+		return
+	}
+
+	message.Success(ctx)
+}
+
+// 修改用户
+func (*User) Update(ctx *gin.Context) {
+
+	var param request.UserUpdate
+
+	if err := ctx.Bind(&param); err != nil {
+		message.Error(ctx, err.Error())
+		return
+	}
+
+	param.Id, _ = strconv.Atoi(ctx.Param("id"))
+
+	if err := (&service.User{}).Update(param); err != nil {
+		message.Error(ctx, err.Error())
+		return
+	}
+
+	message.Success(ctx)
+}

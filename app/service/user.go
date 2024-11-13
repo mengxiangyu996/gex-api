@@ -75,15 +75,10 @@ func (*User) Delete(id int) error {
 // 添加用户
 func (*User) Insert(param request.UserAdd) error {
 
-	enable := 0
-	if param.Enable {
-		enable = 1
-	}
-
 	user := model.User{
 		Username: param.Username,
 		Password: param.Password,
-		Enable:   enable,
+		Enable:   param.Enable,
 	}
 
 	query := dal.Gorm.Begin()
@@ -108,5 +103,33 @@ func (*User) Insert(param request.UserAdd) error {
 
 // 更新用户
 func (*User) Update(user request.UserUpdate) error {
-	return dal.Gorm.Model(&model.User{}).Where("id = ?", user.Id).Updates(user).Error
+
+	query := dal.Gorm.Begin()
+
+	if err := query.Model(&model.User{}).Select("enable").Where("id = ?", user.Id).Updates(&model.User{
+		Password: user.Password,
+		Enable:   user.Enable,
+	}).Error; err != nil {
+		query.Rollback()
+		return err
+	}
+
+	if len(user.RoleIds) > 0 {
+		if err := query.Model(&model.UserRolesRole{}).Where("user_id = ?", user.Id).Delete(nil).Error; err != nil {
+			query.Rollback()
+			return err
+		}
+
+		for _, roleId := range user.RoleIds {
+			if err := query.Model(&model.UserRolesRole{}).Create(&model.UserRolesRole{
+				UserId: user.Id,
+				RoleId: roleId,
+			}).Error; err != nil {
+				query.Rollback()
+				return err
+			}
+		}
+	}
+
+	return query.Commit().Error
 }

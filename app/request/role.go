@@ -19,3 +19,13 @@ type RoleUpdate struct {
 	Enable        bool   `json:"enable"`
 	PermissionIds []int  `json:"permissionIds"`
 }
+
+type RoleUsersRemove struct {
+	RoleId  int   `json:"roleId"`
+	UserIds []int `json:"userIds"`
+}
+
+type RoleUsersAdd struct {
+	RoleId  int   `json:"roleId"`
+	UserIds []int `json:"userIds"`
+}

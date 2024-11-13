@@ -18,6 +18,7 @@ type UserUpdate struct {
 	Id       int    `json:"id"`
 	Password string `json:"password"`
 	Enable   bool   `json:"enable"`
+	RoleIds  []int  `json:"roleIds"`
 }
 
 type UserProfileUpdate struct {
