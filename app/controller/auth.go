@@ -51,7 +51,7 @@ func (*Auth) Login(ctx *gin.Context) {
 
 	defer delete(captchaCache, strings.ToLower(param.Captcha))
 	if _, ok := captchaCache[strings.ToLower(param.Captcha)]; !ok {
-		message.Error(ctx, "验证码错误")
+		message.Error(ctx, 10003, "验证码错误")
 		return
 	}
 
@@ -81,8 +81,10 @@ func (*Auth) Login(ctx *gin.Context) {
 		CurrentRoleCode: roleCodes[0],
 	}).GenerateToken()
 
-	message.Success(ctx, "登录成功", map[string]interface{}{
-		"accessToken": accessToken,
+	message.Success(ctx, map[string]interface{}{
+		"data": map[string]interface{}{
+			"accessToken": accessToken,
+		},
 	})
 }
 
@@ -124,6 +126,40 @@ func (*Auth) SwitchCurrentRole(ctx *gin.Context) {
 // 退出登录
 func (*Auth) Logout(ctx *gin.Context) {
 	message.Success(ctx, map[string]interface{}{
-		"data":      true,
+		"data": true,
 	})
+}
+
+// 修改密码
+func (*Auth) Password(ctx *gin.Context) {
+
+	var param request.Password
+
+	if err := ctx.Bind(&param); err != nil {
+		message.Error(ctx, err.Error())
+		return
+	}
+
+	if param.OldPassword == "" || param.NewPassword == "" {
+		message.Error(ctx, "旧密码或新密码不能为空")
+		return
+	}
+
+	user := (&service.User{}).GetDetailById(ctx.GetInt("userId"))
+	if !password.Verify(user.Password, param.OldPassword) {
+		message.Error(ctx, "旧密码错误")
+		return
+	}
+
+	user.Password = password.Generate(param.NewPassword)
+
+	if err := (&service.User{}).Update(request.UserUpdate{
+		Id:       user.Id,
+		Password: user.Password,
+	}); err != nil {
+		message.Error(ctx, err.Error())
+		return
+	}
+
+	message.Success(ctx)
 }

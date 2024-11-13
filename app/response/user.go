@@ -2,13 +2,12 @@ package response
 
 import (
 	"isme-go/framework/datetime"
-	"isme-go/types"
 )
 
 type User struct {
 	Id         int               `json:"id"`
 	Username   string            `json:"username"`
-	Enable     types.Boolean     `json:"enable"`
+	Enable     bool              `json:"enable"`
 	CreateTime datetime.Datetime `json:"createTime"`
 	UpdateTime datetime.Datetime `json:"updateTime"`
 	Password   string

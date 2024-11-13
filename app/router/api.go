@@ -22,7 +22,16 @@ func ApiRegister(server *gin.Engine) {
 		api.GET("/user/detail", (&controller.User{}).Detail)
 		api.GET("/user", (&controller.User{}).Page)
 		api.DELETE("/user/:id", (&controller.User{}).Delete)
+		api.PATCH("/user/profile/:id", (&controller.User{}).ProfileUpdate)
+		api.POST("/auth/password", (&controller.Auth{}).Password)
+		api.POST("/user", (&controller.User{}).Add)
 		api.GET("/role/permissions/tree", (&controller.Role{}).PermissionsTree)
+		api.GET("/role/page", (&controller.Role{}).Page)
+		api.GET("/role", (&controller.Role{}).List)
+		api.POST("/role", (&controller.Role{}).Add)
+		api.PATCH("/role/:id", (&controller.Role{}).Update)
+		api.GET("/permission/menu/tree", (&controller.Permission{}).MenuTree)
+		api.GET("/permission/tree", (&controller.Permission{}).Tree)
 	}
 
 }

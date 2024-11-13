@@ -16,3 +16,11 @@ func (*UserRolesRole) GetRoleIdsByUserId(userId int) []int {
 
 	return ids
 }
+
+// 添加用户角色
+func (*UserRolesRole) Insert(userId int, roleId int) error {
+	return dal.Gorm.Model(&model.UserRolesRole{}).Create(&model.UserRolesRole{
+		UserId: userId,
+		RoleId: roleId,
+	}).Error
+}

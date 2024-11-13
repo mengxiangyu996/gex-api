@@ -19,6 +19,15 @@ func Authorization() gin.HandlerFunc {
 			return
 		}
 
+		ctx.Set("userId", userClaims.UserId)
+		ctx.Set("username", userClaims.Username)
+		ctx.Set("roleCode", userClaims.CurrentRoleCode)
+		
+		if userClaims.CurrentRoleCode == "SUPER_ADMIN" {
+			ctx.Next()
+			return
+		}
+
 		permission := (&service.Permission{}).GetDetailByPathAndMethod(ctx.Request.URL.Path, "")
 		if permission.Id <= 0 {
 			message.Error(ctx, 403, "没有权限")
@@ -38,10 +47,6 @@ func Authorization() gin.HandlerFunc {
 			ctx.Abort()
 			return
 		}
-
-		ctx.Set("userId", userClaims.UserId)
-		ctx.Set("username", userClaims.Username)
-		ctx.Set("roleCode", userClaims.CurrentRoleCode)
 
 		ctx.Next()
 	}

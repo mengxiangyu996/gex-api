@@ -2,6 +2,7 @@ package service
 
 import (
 	"isme-go/app/model"
+	"isme-go/app/request"
 	"isme-go/app/response"
 	"isme-go/framework/dal"
 )
@@ -32,4 +33,108 @@ func (*Role) GetDetailByCode(code string) response.Role {
 	dal.Gorm.Model(&model.Role{}).Where("code = ?", code).Scan(&role)
 
 	return role
+}
+
+// 角色分页
+func (*Role) Page(param request.RolePage) ([]response.Role, int) {
+
+	roles := make([]response.Role, 0)
+	var total int64
+
+	query := dal.Gorm.Model(&model.Role{})
+
+	if param.Name != "" {
+		query = query.Where("name like ?", "%"+param.Name+"%")
+	}
+
+	if param.Enable != nil {
+		query = query.Where("enable = ?", param.Enable)
+	}
+
+	query.Count(&total).Offset((param.PageNo - 1) * param.PageSize).Limit(param.PageSize).Scan(&roles)
+
+	return roles, int(total)
+}
+
+// 获取角色列表
+func (*Role) List() []response.Role {
+
+	roles := make([]response.Role, 0)
+
+	dal.Gorm.Model(&model.Role{}).Scan(&roles)
+
+	return roles
+}
+
+// 添加角色
+func (*Role) Insert(param request.RoleAdd) error {
+
+	enable := 0
+	if param.Enable {
+		enable = 1
+	}
+
+	role := model.Role{
+		Code:   param.Code,
+		Name:   param.Name,
+		Enable: enable,
+	}
+
+	query := dal.Gorm.Begin()
+
+	if err := query.Model(&model.Role{}).Create(&role).Error; err != nil {
+		query.Rollback()
+		return err
+	}
+
+	for _, permissionId := range param.PermissionIds {
+		if err := query.Model(&model.RolePermissionsPermission{}).Create(&model.RolePermissionsPermission{
+			RoleId:       role.Id,
+			PermissionId: permissionId,
+		}).Error; err != nil {
+			query.Rollback()
+			return err
+		}
+	}
+
+	return query.Commit().Error
+}
+
+// 修改角色
+func (*Role) Update(param request.RoleUpdate) error {
+
+	enable := 0
+	if param.Enable {
+		enable = 1
+	}
+
+	role := model.Role{
+		Id:     param.Id,
+		Name:   param.Name,
+		Enable: enable,
+	}
+
+	query := dal.Gorm.Begin()
+
+	if err := query.Model(&model.Role{}).Where("id = ?", role.Id).Updates(&role).Error; err != nil {
+		query.Rollback()
+		return err
+	}
+
+	if err := query.Model(&model.RolePermissionsPermission{}).Where("role_id = ?", role.Id).Delete(nil).Error; err != nil {
+		query.Rollback()
+		return err
+	}
+
+	for _, permissionId := range param.PermissionIds {
+		if err := query.Model(&model.RolePermissionsPermission{}).Create(&model.RolePermissionsPermission{
+			RoleId:       role.Id,
+			PermissionId: permissionId,
+		}).Error; err != nil {
+			query.Rollback()
+			return err
+		}
+	}
+
+	return query.Commit().Error
 }

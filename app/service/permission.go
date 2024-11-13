@@ -24,6 +24,22 @@ func (*Permission) GetListByIds(ids []int, enable bool) []response.Permission {
 	return permissions
 }
 
+// 获取资源列表
+func (*Permission) GetList(enable bool) []response.Permission {
+
+	permissions := make([]response.Permission, 0)
+
+	query := dal.Gorm.Model(&model.Permission{})
+
+	if enable {
+		query = query.Where("enable = ?", 1)
+	}
+
+	query.Order("`order`").Scan(&permissions)
+
+	return permissions
+}
+
 // 资源列表转资源树
 func (p *Permission) ListToTree(list []response.Permission, parentId int) []response.PermissionTree {
 

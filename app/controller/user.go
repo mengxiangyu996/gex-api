@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"fmt"
 	"isme-go/app/request"
 	"isme-go/app/response"
 	"isme-go/app/service"
 	"isme-go/framework/message"
+	"isme-go/utils/password"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -44,16 +44,12 @@ func (*User) Detail(ctx *gin.Context) {
 // 获取用户列表
 func (*User) Page(ctx *gin.Context) {
 
-	fmt.Println(ctx.Query("pageSize"))
-
 	var param request.UserPage
 
 	if err := ctx.BindQuery(&param); err != nil {
 		message.Error(ctx, err.Error())
 		return
 	}
-
-	fmt.Println(param)
 
 	userPages := make([]response.UserPage, 0)
 
@@ -102,5 +98,70 @@ func (*User) Delete(ctx *gin.Context) {
 		return
 	}
 
-	message.Success(ctx, nil)
+	message.Success(ctx)
+}
+
+// 添加用户
+func (*User) Add(ctx *gin.Context) {
+
+	var param request.UserAdd
+
+	if err := ctx.Bind(&param); err != nil {
+		message.Error(ctx, err.Error())
+		return
+	}
+
+	if param.Username == "" {
+		message.Error(ctx, "用户名不能为空")
+		return
+	}
+
+	if param.Password == "" {
+		message.Error(ctx, "密码不能为空")
+		return
+	}
+
+	user := (&service.User{}).GetDetailByUsername(param.Username)
+	if user.Id > 0 {
+		message.Error(ctx, "用户名已存在")
+		return
+	}
+
+	param.Password = password.Generate(param.Password)
+
+	if err := (&service.User{}).Insert(param); err != nil {
+		message.Error(ctx, err.Error())
+		return
+	}
+
+	message.Success(ctx)
+}
+
+// 修改资料
+func (*User) ProfileUpdate(ctx *gin.Context) {
+
+	id, _ := strconv.Atoi(ctx.Param("id"))
+
+	var param request.UserProfileUpdate
+
+	if err := ctx.Bind(&param); err != nil {
+		message.Error(ctx, err.Error())
+		return
+	}
+
+	userId := ctx.GetInt("userId")
+
+	if id != userId {
+		message.Error(ctx, "越权操作，用户资料只能本人修改")
+		return
+	}
+
+	param.Id = id
+
+	if err := (&service.Profile{}).Update(param); err != nil {
+		message.Error(ctx, err.Error())
+		return
+	}
+
+	message.Success(ctx)
 }

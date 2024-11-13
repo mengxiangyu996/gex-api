@@ -71,3 +71,42 @@ func (*User) Delete(id int) error {
 
 	return query.Commit().Error
 }
+
+// 添加用户
+func (*User) Insert(param request.UserAdd) error {
+
+	enable := 0
+	if param.Enable {
+		enable = 1
+	}
+
+	user := model.User{
+		Username: param.Username,
+		Password: param.Password,
+		Enable:   enable,
+	}
+
+	query := dal.Gorm.Begin()
+
+	if err := query.Model(&model.User{}).Create(&user).Error; err != nil {
+		query.Rollback()
+		return err
+	}
+
+	for _, roleId := range param.RoleIds {
+		if err := query.Model(&model.UserRolesRole{}).Create(&model.UserRolesRole{
+			UserId: user.Id,
+			RoleId: roleId,
+		}).Error; err != nil {
+			query.Rollback()
+			return err
+		}
+	}
+
+	return query.Commit().Error
+}
+
+// 更新用户
+func (*User) Update(user request.UserUpdate) error {
+	return dal.Gorm.Model(&model.User{}).Where("id = ?", user.Id).Updates(user).Error
+}

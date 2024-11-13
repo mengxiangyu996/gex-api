@@ -5,3 +5,8 @@ type Login struct {
 	Password string `json:"password"`
 	Captcha  string `json:"captcha"`
 }
+
+type Password struct {
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
+}

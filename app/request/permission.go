@@ -1,11 +1,10 @@
-package response
+package request
 
-type Permission struct {
-	Id          int    `json:"id"`
+type PermissionAdd struct {
 	Name        string `json:"name"`
 	Code        string `json:"code"`
 	Type        string `json:"type"`
-	ParentId    int    `json:"parentId"`
+	ParentId    int    `json:"parent_id"`
 	Path        string `json:"path"`
 	Redirect    string `json:"redirect"`
 	Icon        string `json:"icon"`
@@ -17,9 +16,4 @@ type Permission struct {
 	Show        bool   `json:"show"`
 	Enable      bool   `json:"enable"`
 	Order       int    `json:"order"`
-}
-
-type PermissionTree struct {
-	Permission
-	Children []PermissionTree `json:"children"`
 }

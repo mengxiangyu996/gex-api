@@ -28,7 +28,7 @@ func New(config *Config) *Captcha {
 // 生成验证码
 func (c *Captcha) Generate() ([]byte, string) {
 
-	charset := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	charset := "0123456789"
 	rand.Seed(time.Now().UnixNano())
 
 	chars := make([]rune, c.config.CharsCount)
