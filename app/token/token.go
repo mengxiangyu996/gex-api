@@ -13,17 +13,20 @@ import (
 
 // 用户声明
 type UserClaims struct {
-	Id       int
-	Username string
+	UserId          int      `json:"userId"`
+	Username        string   `json:"username"`
+	RoleCodes       []string `json:"roleCodes"`
+	CurrentRoleCode string   `json:"currentRoleCode"`
 	jwt.RegisteredClaims
 }
 
 // 获取用户声明
 func GetClaims(user response.UserToken) *UserClaims {
 	return &UserClaims{
-		Id:       user.Id,
-		Username: user.Username,
-
+		UserId:          user.Id,
+		Username:        user.Username,
+		RoleCodes:       user.RoleCodes,
+		CurrentRoleCode: user.CurrentRoleCode,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * time.Duration(config.Data.Token.ExpireTime))), // 过期时间，默认30分钟
 			IssuedAt:  jwt.NewNumericDate(time.Now()),                                                                // 签发时间

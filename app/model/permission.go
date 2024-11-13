@@ -15,6 +15,6 @@ type Permission struct {
 	Method      string
 	Description string
 	Show        int
-	Enable      int
+	Enable      int `gorm:"default:1"`
 	Order       int
 }

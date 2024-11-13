@@ -10,13 +10,13 @@ CREATE TABLE `permission`  (
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
   `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '编码',
   `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '类型',
-  `parentId` int(11) NULL DEFAULT NULL COMMENT '父ID',
+  `parent_id` int(11) NULL DEFAULT NULL COMMENT '父ID',
   `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '路由地址',
   `redirect` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '重定向',
   `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图标',
   `component` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '组件',
   `layout` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '布局',
-  `keepAlive` tinyint(4) NULL DEFAULT NULL COMMENT '是否缓存',
+  `keep_alive` tinyint(4) NULL DEFAULT NULL COMMENT '是否缓存',
   `method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '方法',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '描述',
   `show` tinyint(4) NOT NULL DEFAULT 1 COMMENT '是否展示在页面菜单',
@@ -55,10 +55,10 @@ CREATE TABLE `profile`  (
   `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80' COMMENT '头像',
   `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '地址',
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '邮箱',
-  `userId` int(11) NOT NULL COMMENT '用户ID',
-  `nickName` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '昵称',
+  `user_id` int(11) NOT NULL COMMENT '用户ID',
+  `nickname` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '昵称',
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `IDX_a24972ebd73b106250713dcddd`(`userId`) USING BTREE
+  UNIQUE INDEX `IDX_a24972ebd73b106250713dcddd`(`user_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic COMMENT = '用户资料表';
 
 -- ----------------------------
@@ -91,11 +91,11 @@ INSERT INTO `role` VALUES (2, 'ROLE_QA', '质检员', 1);
 -- ----------------------------
 DROP TABLE IF EXISTS `role_permissions_permission`;
 CREATE TABLE `role_permissions_permission`  (
-  `roleId` int(11) NOT NULL COMMENT '角色ID',
-  `permissionId` int(11) NOT NULL COMMENT '资源ID',
-  PRIMARY KEY (`roleId`, `permissionId`) USING BTREE,
-  INDEX `IDX_b36cb2e04bc353ca4ede00d87b`(`roleId`) USING BTREE,
-  INDEX `IDX_bfbc9e263d4cea6d7a8c9eb3ad`(`permissionId`) USING BTREE
+  `role_id` int(11) NOT NULL COMMENT '角色ID',
+  `permission_id` int(11) NOT NULL COMMENT '资源ID',
+  PRIMARY KEY (`role_id`, `permission_id`) USING BTREE,
+  INDEX `IDX_b36cb2e04bc353ca4ede00d87b`(`role_id`) USING BTREE,
+  INDEX `IDX_bfbc9e263d4cea6d7a8c9eb3ad`(`permission_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic COMMENT = '角色资源表';
 
 -- ----------------------------
@@ -138,11 +138,11 @@ INSERT INTO `user` VALUES (1, 'admin', '$2a$10$fdbz/fQTFSsrl3XTA6WgjehdvFFT94xYZ
 -- ----------------------------
 DROP TABLE IF EXISTS `user_roles_role`;
 CREATE TABLE `user_roles_role`  (
-  `userId` int(11) NOT NULL COMMENT '用户ID',
-  `roleId` int(11) NOT NULL COMMENT '角色ID',
-  PRIMARY KEY (`userId`, `roleId`) USING BTREE,
-  INDEX `IDX_5f9286e6c25594c6b88c108db7`(`userId`) USING BTREE,
-  INDEX `IDX_4be2f7adf862634f5f803d246b`(`roleId`) USING BTREE
+  `user_id` int(11) NOT NULL COMMENT '用户ID',
+  `role_id` int(11) NOT NULL COMMENT '角色ID',
+  PRIMARY KEY (`user_id`, `role_id`) USING BTREE,
+  INDEX `IDX_5f9286e6c25594c6b88c108db7`(`user_id`) USING BTREE,
+  INDEX `IDX_4be2f7adf862634f5f803d246b`(`role_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic COMMENT = '用户角色表';
 
 -- ----------------------------

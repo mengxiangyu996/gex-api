@@ -6,6 +6,7 @@ import (
 	"isme-go/app/service"
 	"isme-go/app/token"
 	"isme-go/framework/message"
+	"isme-go/utils"
 	"isme-go/utils/captcha"
 	"isme-go/utils/password"
 	"strings"
@@ -56,18 +57,73 @@ func (*Auth) Login(ctx *gin.Context) {
 
 	user := (&service.User{}).GetDetailByUsername(param.Username)
 
-	if !password.Verify(param.Password, user.Password) {
+	if !password.Verify(user.Password, param.Password) {
 		message.Error(ctx, "用户名或密码错误")
 		return
 	}
 
-	token := token.GetClaims(response.UserToken{
-		Id:       user.Id,
-		Username: user.Username,
+	roleIds := (&service.UserRolesRole{}).GetRoleIdsByUserId(user.Id)
+	roles := (&service.Role{}).GetListByIds(roleIds, true)
+	if len(roles) <= 0 {
+		message.Error(ctx, "用户未关联角色")
+		return
+	}
+
+	roleCodes := make([]string, 0)
+	for _, role := range roles {
+		roleCodes = append(roleCodes, role.Code)
+	}
+
+	accessToken := token.GetClaims(response.UserToken{
+		Id:              user.Id,
+		Username:        user.Username,
+		RoleCodes:       roleCodes,
+		CurrentRoleCode: roleCodes[0],
 	}).GenerateToken()
 
 	message.Success(ctx, "登录成功", map[string]interface{}{
-		"accessToken": token,
-		"originUrl":   strings.Replace(ctx.FullPath(), "/api", "", 1),
+		"accessToken": accessToken,
+	})
+}
+
+// 切换当前角色
+func (*Auth) SwitchCurrentRole(ctx *gin.Context) {
+
+	roleCode := ctx.Param("roleCode")
+
+	userId := ctx.GetInt("userId")
+	username := ctx.GetString("username")
+
+	roleIds := (&service.UserRolesRole{}).GetRoleIdsByUserId(userId)
+	roles := (&service.Role{}).GetListByIds(roleIds, true)
+
+	roleCodes := make([]string, 0)
+	for _, role := range roles {
+		roleCodes = append(roleCodes, role.Code)
+	}
+
+	if !utils.Contains(roleCodes, roleCode) {
+		message.Error(ctx, "您目前暂无此角色，请联系管理员申请权限")
+		return
+	}
+
+	accessToken := token.GetClaims(response.UserToken{
+		Id:              userId,
+		Username:        username,
+		RoleCodes:       roleCodes,
+		CurrentRoleCode: roleCode,
+	}).GenerateToken()
+
+	message.Success(ctx, map[string]interface{}{
+		"data": map[string]interface{}{
+			"accessToken": accessToken,
+		},
+	})
+}
+
+// 退出登录
+func (*Auth) Logout(ctx *gin.Context) {
+	message.Success(ctx, map[string]interface{}{
+		"data":      true,
 	})
 }

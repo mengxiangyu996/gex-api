@@ -32,7 +32,7 @@ func main() {
 					SingularTable: true,
 				},
 				Logger: logger.New(log.Default(), logger.Config{
-					LogLevel: logger.Silent, // 不打印日志
+					LogLevel: logger.Error, // 打印错误日志
 				}),
 			},
 			MaxOpenConns: config.Data.Mysql.MaxOpenConns,
