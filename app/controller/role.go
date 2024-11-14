@@ -5,7 +5,6 @@ import (
 	"isme-go/app/response"
 	"isme-go/app/service"
 	"isme-go/framework/message"
-	"isme-go/utils"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -17,12 +16,13 @@ type Role struct{}
 func (*Role) PermissionsTree(ctx *gin.Context) {
 
 	userId := ctx.GetInt("userId")
+	roleCode := ctx.GetString("roleCode")
 
 	roleIds := (&service.UserRolesRole{}).GetRoleIdsByUserId(userId)
 
 	permissionIds := (&service.RolePermissionsPermission{}).GetPermissionIdsByRoleIds(roleIds)
 
-	if utils.Contains(roleIds, 1) {
+	if roleCode == "SUPER_ADMIN" {
 		permissionIds = []int{}
 	}
 

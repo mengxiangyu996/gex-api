@@ -41,13 +41,13 @@ func ApiRegister(server *gin.Engine) {
 		api.GET("/permission/button/:parentId", (&controller.Permission{}).Button) // 权限按钮
 
 		// 角色
-		api.GET("/role/page", (&controller.Role{}).Page)                       // 角色列表-分页
-		api.GET("/role", (&controller.Role{}).List)                            // 角色列表-all
-		api.PATCH("/role/:id", (&controller.Role{}).Update)                    // 修改角色
-		api.POST("/role", (&controller.Role{}).Add)                            // 新增角色
-		api.DELETE("/role/:id", (&controller.Role{}).Delete)                   // 删除角色
-		api.POST("/role/users/add/:id", (&controller.Role{}).UsersAdd)         // 分配角色-批量
-		api.DELETE("/role/users/remove/:id", (&controller.Role{}).UsersRemove) // 取消分配角色-批量
+		api.GET("/role/page", (&controller.Role{}).Page)                      // 角色列表-分页
+		api.GET("/role", (&controller.Role{}).List)                           // 角色列表-all
+		api.PATCH("/role/:id", (&controller.Role{}).Update)                   // 修改角色
+		api.POST("/role", (&controller.Role{}).Add)                           // 新增角色
+		api.DELETE("/role/:id", (&controller.Role{}).Delete)                  // 删除角色
+		api.PATCH("/role/users/add/:id", (&controller.Role{}).UsersAdd)       // 分配角色-批量
+		api.PATCH("/role/users/remove/:id", (&controller.Role{}).UsersRemove) // 取消分配角色-批量
 
 	}
 }

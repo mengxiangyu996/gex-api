@@ -17,6 +17,7 @@ type User struct{}
 func (*User) Detail(ctx *gin.Context) {
 
 	userId := ctx.GetInt("userId")
+	roleCode := ctx.GetString("roleCode")
 
 	user := (&service.User{}).GetDetailById(userId)
 
@@ -33,7 +34,12 @@ func (*User) Detail(ctx *gin.Context) {
 	userResponse.Profile = profile
 
 	if len(roles) > 0 {
-		userResponse.CurrentRole = roles[0]
+		for _, role := range roles {
+			if role.Code == roleCode {
+				userResponse.CurrentRole = role
+				break
+			}
+		}
 	}
 
 	message.Success(ctx, map[string]interface{}{

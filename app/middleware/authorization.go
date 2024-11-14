@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"isme-go/app/service"
 	"isme-go/app/token"
 	"isme-go/framework/message"
 
@@ -22,7 +23,13 @@ func Authorization() gin.HandlerFunc {
 		ctx.Set("username", userClaims.Username)
 		ctx.Set("roleCode", userClaims.CurrentRoleCode)
 		
-		// todo 权限处理
+		// 超级管理员不做鉴权
+		if userClaims.CurrentRoleCode == "SUPER_ADMIN" {
+			ctx.Next()
+			return
+		}
+
+		(&service.Permission{}).GetDetailByPathAndMethod(ctx.FullPath(), "")
 
 		ctx.Next()
 	}

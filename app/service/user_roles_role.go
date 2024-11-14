@@ -4,6 +4,7 @@ import (
 	"isme-go/app/model"
 	"isme-go/app/request"
 	"isme-go/framework/dal"
+	"isme-go/utils"
 )
 
 type UserRolesRole struct{}
@@ -19,11 +20,15 @@ func (*UserRolesRole) GetRoleIdsByUserId(userId int) []int {
 }
 
 // 添加用户角色
-func (*UserRolesRole) Insert(param request.RoleUsersAdd) error {
+func (u *UserRolesRole) Insert(param request.RoleUsersAdd) error {
 
 	query := dal.Gorm.Begin()
 
 	for _, userId := range param.UserIds {
+		roleIds := u.GetRoleIdsByUserId(userId)
+		if utils.Contains(roleIds, param.RoleId) {
+			continue
+		}
 		if err := query.Create(&model.UserRolesRole{
 			UserId: userId,
 			RoleId: param.RoleId,
