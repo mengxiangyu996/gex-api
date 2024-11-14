@@ -22,14 +22,26 @@ func Authorization() gin.HandlerFunc {
 		ctx.Set("userId", userClaims.UserId)
 		ctx.Set("username", userClaims.Username)
 		ctx.Set("roleCode", userClaims.CurrentRoleCode)
-		
+
 		// 超级管理员不做鉴权
 		if userClaims.CurrentRoleCode == "SUPER_ADMIN" {
 			ctx.Next()
 			return
 		}
 
-		(&service.Permission{}).GetDetailByPathAndMethod(ctx.FullPath(), "")
+		permission := (&service.Permission{}).GetDetailByPathAndMethod(ctx.FullPath(), "")
+		if permission.Id <= 0 {
+			ctx.Next()
+			return
+		}
+
+		if role := (&service.Role{}).GetDetailByCode(userClaims.CurrentRoleCode); role.Id > 0 {
+			if !(&service.RolePermissionsPermission{}).CheckHasPermission(role.Id, permission.Id) {
+				message.Error(ctx, "您目前暂无此权限，请联系管理员申请权限")
+				ctx.Abort()
+				return
+			}
+		}
 
 		ctx.Next()
 	}
