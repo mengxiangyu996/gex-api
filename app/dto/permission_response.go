@@ -1,6 +1,6 @@
-package response
+package dto
 
-type Permission struct {
+type PermissionResponse struct {
 	Id          int    `json:"id"`
 	Name        string `json:"name"`
 	Code        string `json:"code"`
@@ -19,7 +19,7 @@ type Permission struct {
 	Order       int    `json:"order"`
 }
 
-type PermissionTree struct {
-	Permission
-	Children []PermissionTree `json:"children"`
+type PermissionTreeResponse struct {
+	PermissionResponse
+	Children []PermissionTreeResponse `json:"children"`
 }

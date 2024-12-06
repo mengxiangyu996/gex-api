@@ -1,8 +1,8 @@
 package service
 
 import (
+	"isme-go/app/dto"
 	"isme-go/app/model"
-	"isme-go/app/request"
 	"isme-go/framework/dal"
 	"isme-go/utils"
 )
@@ -20,7 +20,7 @@ func (*UserRolesRole) GetRoleIdsByUserId(userId int) []int {
 }
 
 // 添加用户角色
-func (u *UserRolesRole) Insert(param request.RoleUsersAdd) error {
+func (u *UserRolesRole) Insert(param dto.RoleUsersAddRequest) error {
 
 	query := dal.Gorm.Begin()
 
@@ -42,6 +42,6 @@ func (u *UserRolesRole) Insert(param request.RoleUsersAdd) error {
 }
 
 // 取消分配角色-批量
-func (*UserRolesRole) Delete(param request.RoleUsersRemove) error {
+func (*UserRolesRole) Delete(param dto.RoleUsersRemoveRequest) error {
 	return dal.Gorm.Model(&model.UserRolesRole{}).Where("user_id in ? AND role_id = ?", param.UserIds, param.RoleId).Delete(nil).Error
 }

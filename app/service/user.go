@@ -1,18 +1,17 @@
 package service
 
 import (
+	"isme-go/app/dto"
 	"isme-go/app/model"
-	"isme-go/app/request"
-	"isme-go/app/response"
 	"isme-go/framework/dal"
 )
 
 type User struct{}
 
 // 获取用户信息
-func (*User) GetDetailByUsername(username string) response.User {
+func (*User) GetDetailByUsername(username string) dto.UserResponse {
 
-	var user response.User
+	var user dto.UserResponse
 
 	dal.Gorm.Model(&model.User{}).Where("username = ?", username).Take(&user)
 
@@ -20,9 +19,9 @@ func (*User) GetDetailByUsername(username string) response.User {
 }
 
 // 获取用户信息
-func (*User) GetDetailById(id int) response.User {
+func (*User) GetDetailById(id int) dto.UserResponse {
 
-	var user response.User
+	var user dto.UserResponse
 
 	dal.Gorm.Model(&model.User{}).Where("id = ?", id).Take(&user)
 
@@ -30,9 +29,9 @@ func (*User) GetDetailById(id int) response.User {
 }
 
 // 获取用户列表
-func (*User) Page(param request.UserPage) ([]response.User, int) {
+func (*User) Page(param dto.UserPageRequest) ([]dto.UserResponse, int) {
 
-	users := make([]response.User, 0)
+	users := make([]dto.UserResponse, 0)
 	var count int64
 
 	query := dal.Gorm.Model(&model.User{})
@@ -73,7 +72,7 @@ func (*User) Delete(id int) error {
 }
 
 // 添加用户
-func (*User) Insert(param request.UserAdd) error {
+func (*User) Insert(param dto.UserAddRequest) error {
 
 	user := model.User{
 		Username: param.Username,
@@ -102,7 +101,7 @@ func (*User) Insert(param request.UserAdd) error {
 }
 
 // 更新用户
-func (*User) Update(user request.UserUpdate) error {
+func (*User) Update(user dto.UserUpdateRequest) error {
 
 	query := dal.Gorm.Begin()
 

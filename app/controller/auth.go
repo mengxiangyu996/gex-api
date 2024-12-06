@@ -1,11 +1,10 @@
 package controller
 
 import (
-	"isme-go/app/request"
-	"isme-go/app/response"
+	"isme-go/app/dto"
 	"isme-go/app/service"
 	"isme-go/app/token"
-	"isme-go/framework/message"
+	"isme-go/framework/response"
 	"isme-go/utils"
 	"isme-go/utils/captcha"
 	"isme-go/utils/password"
@@ -37,39 +36,39 @@ func (*Auth) Captcha(ctx *gin.Context) {
 // 登录
 func (*Auth) Login(ctx *gin.Context) {
 
-	var param request.Login
+	var param dto.LoginRequest
 
 	if err := ctx.Bind(&param); err != nil {
-		message.Error(ctx, err.Error())
+		response.NewError().SetMsg(err.Error()).Json(ctx)
 		return
 	}
 
 	if param.Username == "" || param.Password == "" {
-		message.Error(ctx, "用户名或密码不能为空")
+		response.NewError().SetMsg("用户名或密码不能为空").Json(ctx)
 		return
 	}
 
 	defer delete(captchaCache, strings.ToLower(param.Captcha))
 	if _, ok := captchaCache[strings.ToLower(param.Captcha)]; !ok {
-		message.Error(ctx, 10003, "验证码错误")
+		response.NewError().SetCode(10003).SetMsg("验证码错误").Json(ctx)
 		return
 	}
 
 	user := (&service.User{}).GetDetailByUsername(param.Username)
 	if !user.Enable {
-		message.Error(ctx, "用户已禁用")
+		response.NewError().SetMsg("用户已禁用").Json(ctx)
 		return
 	}
 
 	if !password.Verify(user.Password, param.Password) {
-		message.Error(ctx, "用户名或密码错误")
+		response.NewError().SetMsg("用户名或密码错误").Json(ctx)
 		return
 	}
 
 	roleIds := (&service.UserRolesRole{}).GetRoleIdsByUserId(user.Id)
 	roles := (&service.Role{}).GetListByIds(roleIds, true)
 	if len(roles) <= 0 {
-		message.Error(ctx, "用户未关联角色")
+		response.NewError().SetMsg("用户未关联角色").Json(ctx)
 		return
 	}
 
@@ -78,18 +77,16 @@ func (*Auth) Login(ctx *gin.Context) {
 		roleCodes = append(roleCodes, role.Code)
 	}
 
-	accessToken := token.GetClaims(response.UserToken{
+	accessToken := token.GetClaims(dto.UserTokenResponse{
 		Id:              user.Id,
 		Username:        user.Username,
 		RoleCodes:       roleCodes,
 		CurrentRoleCode: roleCodes[0],
 	}).GenerateToken()
 
-	message.Success(ctx, map[string]interface{}{
-		"data": map[string]interface{}{
-			"accessToken": accessToken,
-		},
-	})
+	response.NewSuccess().SetData("data", map[string]interface{}{
+		"accessToken": accessToken,
+	}).Json(ctx)
 }
 
 // 切换当前角色
@@ -109,61 +106,57 @@ func (*Auth) SwitchCurrentRole(ctx *gin.Context) {
 	}
 
 	if !utils.Contains(roleCodes, roleCode) {
-		message.Error(ctx, "您目前暂无此角色，请联系管理员申请权限")
+		response.NewError().SetMsg("您目前暂无此角色，请联系管理员申请权限").Json(ctx)
 		return
 	}
 
-	accessToken := token.GetClaims(response.UserToken{
+	accessToken := token.GetClaims(dto.UserTokenResponse{
 		Id:              userId,
 		Username:        username,
 		RoleCodes:       roleCodes,
 		CurrentRoleCode: roleCode,
 	}).GenerateToken()
 
-	message.Success(ctx, map[string]interface{}{
-		"data": map[string]interface{}{
-			"accessToken": accessToken,
-		},
-	})
+	response.NewSuccess().SetData("data", map[string]interface{}{
+		"accessToken": accessToken,
+	}).Json(ctx)
 }
 
 // 退出登录
 func (*Auth) Logout(ctx *gin.Context) {
-	message.Success(ctx, map[string]interface{}{
-		"data": true,
-	})
+	response.NewSuccess().SetData("data", true).Json(ctx)
 }
 
 // 修改密码
 func (*Auth) Password(ctx *gin.Context) {
 
-	var param request.Password
+	var param dto.PasswordRequest
 
 	if err := ctx.Bind(&param); err != nil {
-		message.Error(ctx, err.Error())
+		response.NewError().SetMsg(err.Error()).Json(ctx)
 		return
 	}
 
 	if param.OldPassword == "" || param.NewPassword == "" {
-		message.Error(ctx, "旧密码或新密码不能为空")
+		response.NewError().SetMsg("旧密码或新密码不能为空").Json(ctx)
 		return
 	}
 
 	user := (&service.User{}).GetDetailById(ctx.GetInt("userId"))
 	if !password.Verify(user.Password, param.OldPassword) {
-		message.Error(ctx, "旧密码错误")
+		response.NewError().SetMsg("旧密码错误").Json(ctx)
 		return
 	}
 
 	user.Password = password.Generate(param.NewPassword)
 
-	if err := (&service.User{}).Update(request.UserUpdate{
+	if err := (&service.User{}).Update(dto.UserUpdateRequest{
 		Id:       user.Id,
 		Password: user.Password,
 	}); err != nil {
-		message.Error(ctx, err.Error())
+		response.NewError().SetMsg(err.Error()).Json(ctx)
 		return
 	}
 
-	message.Success(ctx)
+	response.NewSuccess().Json(ctx)
 }

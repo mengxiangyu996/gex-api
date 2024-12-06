@@ -1,6 +1,6 @@
-package response
+package dto
 
-type Profile struct {
+type ProfileResponse struct {
 	Id       int    `json:"id"`
 	Gender   int    `json:"gender"`
 	Avatar   string `json:"avatar"`

@@ -1,13 +1,13 @@
-package response
+package dto
 
-type Role struct {
+type RoleResponse struct {
 	Id     int    `json:"id"`
 	Code   string `json:"code"`
 	Name   string `json:"name"`
 	Enable bool   `json:"enable"`
 }
 
-type RolePage struct {
-	Role
+type RolePageResponse struct {
+	RoleResponse
 	PermissionIds []int `json:"permissionIds"`
 }

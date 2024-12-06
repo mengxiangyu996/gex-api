@@ -1,18 +1,17 @@
 package service
 
 import (
+	"isme-go/app/dto"
 	"isme-go/app/model"
-	"isme-go/app/request"
-	"isme-go/app/response"
 	"isme-go/framework/dal"
 )
 
 type Role struct{}
 
 // 获取角色详情
-func (*Role) GetDetailById(id int) response.Role {
+func (*Role) GetDetailById(id int) dto.RoleResponse {
 
-	var role response.Role
+	var role dto.RoleResponse
 
 	dal.Gorm.Model(&model.Role{}).Where("id = ?", id).Take(&role)
 
@@ -20,9 +19,9 @@ func (*Role) GetDetailById(id int) response.Role {
 }
 
 // 获取角色列表
-func (*Role) GetListByIds(ids []int, enable bool) []response.Role {
+func (*Role) GetListByIds(ids []int, enable bool) []dto.RoleResponse {
 
-	roles := make([]response.Role, 0)
+	roles := make([]dto.RoleResponse, 0)
 
 	query := dal.Gorm.Model(&model.Role{}).Where("id in ?", ids)
 
@@ -36,9 +35,9 @@ func (*Role) GetListByIds(ids []int, enable bool) []response.Role {
 }
 
 // 根据编码获取角色
-func (*Role) GetDetailByCode(code string) response.Role {
+func (*Role) GetDetailByCode(code string) dto.RoleResponse {
 
-	var role response.Role
+	var role dto.RoleResponse
 
 	dal.Gorm.Model(&model.Role{}).Where("code = ?", code).Scan(&role)
 
@@ -46,9 +45,9 @@ func (*Role) GetDetailByCode(code string) response.Role {
 }
 
 // 角色分页
-func (*Role) Page(param request.RolePage) ([]response.Role, int) {
+func (*Role) Page(param dto.RolePageRequest) ([]dto.RoleResponse, int) {
 
-	roles := make([]response.Role, 0)
+	roles := make([]dto.RoleResponse, 0)
 	var total int64
 
 	query := dal.Gorm.Model(&model.Role{})
@@ -67,9 +66,9 @@ func (*Role) Page(param request.RolePage) ([]response.Role, int) {
 }
 
 // 获取角色列表
-func (*Role) List() []response.Role {
+func (*Role) List() []dto.RoleResponse {
 
-	roles := make([]response.Role, 0)
+	roles := make([]dto.RoleResponse, 0)
 
 	dal.Gorm.Model(&model.Role{}).Scan(&roles)
 
@@ -77,7 +76,7 @@ func (*Role) List() []response.Role {
 }
 
 // 添加角色
-func (*Role) Insert(param request.RoleAdd) error {
+func (*Role) Insert(param dto.RoleAddRequest) error {
 
 	role := model.Role{
 		Code:   param.Code,
@@ -106,7 +105,7 @@ func (*Role) Insert(param request.RoleAdd) error {
 }
 
 // 修改角色
-func (*Role) Update(param request.RoleUpdate) error {
+func (*Role) Update(param dto.RoleUpdateRequest) error {
 
 	role := model.Role{
 		Id:     param.Id,

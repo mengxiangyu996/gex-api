@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"isme-go/app/request"
+	"isme-go/app/dto"
 	"isme-go/app/service"
-	"isme-go/framework/message"
+	"isme-go/framework/response"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -19,9 +19,7 @@ func (*Permission) MenuTree(ctx *gin.Context) {
 
 	tree := (&service.Permission{}).ListToTree(list, 0)
 
-	message.Success(ctx, map[string]interface{}{
-		"data": tree,
-	})
+	response.NewSuccess().SetData("data", tree).Json(ctx)
 }
 
 // 获取资源树
@@ -31,32 +29,30 @@ func (*Permission) Tree(ctx *gin.Context) {
 
 	tree := (&service.Permission{}).ListToTree(list, 0)
 
-	message.Success(ctx, map[string]interface{}{
-		"data": tree,
-	})
+	response.NewSuccess().SetData("data", tree).Json(ctx)
 }
 
 // 添加资源
 func (*Permission) Add(ctx *gin.Context) {
 
-	var param request.PermissionAdd
+	var param dto.PermissionAddRequest
 
 	if err := ctx.Bind(&param); err != nil {
-		message.Error(ctx, err.Error())
+		response.NewError().SetMsg(err.Error()).Json(ctx)
 		return
 	}
 
 	if param.Code == "" {
-		message.Error(ctx, "编码不能为空")
+		response.NewError().SetMsg("编码不能为空").Json(ctx)
 		return
 	}
 
 	if err := (&service.Permission{}).Add(param); err != nil {
-		message.Error(ctx, err.Error())
+		response.NewError().SetMsg(err.Error()).Json(ctx)
 		return
 	}
 
-	message.Success(ctx)
+	response.NewSuccess().Json(ctx)
 }
 
 // 删除资源
@@ -65,31 +61,31 @@ func (*Permission) Delete(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
 
 	if err := (&service.Permission{}).Delete(id); err != nil {
-		message.Error(ctx, err.Error())
+		response.NewError().SetMsg(err.Error()).Json(ctx)
 		return
 	}
 
-	message.Success(ctx)
+	response.NewSuccess().Json(ctx)
 }
 
 // 修改资源
 func (*Permission) Update(ctx *gin.Context) {
 
-	var param request.PermissionUpdate
+	var param dto.PermissionUpdateRequest
 
 	if err := ctx.Bind(&param); err != nil {
-		message.Error(ctx, err.Error())
+		response.NewError().SetMsg(err.Error()).Json(ctx)
 		return
 	}
 
 	param.Id, _ = strconv.Atoi(ctx.Param("id"))
 
 	if err := (&service.Permission{}).Update(param); err != nil {
-		message.Error(ctx, err.Error())
+		response.NewError().SetMsg(err.Error()).Json(ctx)
 		return
 	}
 
-	message.Success(ctx)
+	response.NewSuccess().Json(ctx)
 }
 
 // 获取权限按钮
@@ -99,7 +95,5 @@ func (*Permission) Button(ctx *gin.Context) {
 
 	buttons := (&service.Permission{}).GetButtons(parentId)
 
-	message.Success(ctx, map[string]interface{}{
-		"data": buttons,
-	})
+	response.NewSuccess().SetData("data", buttons).Json(ctx)
 }

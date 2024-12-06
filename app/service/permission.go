@@ -1,18 +1,17 @@
 package service
 
 import (
+	"isme-go/app/dto"
 	"isme-go/app/model"
-	"isme-go/app/request"
-	"isme-go/app/response"
 	"isme-go/framework/dal"
 )
 
 type Permission struct{}
 
 // 根据角色id获取资源列表
-func (*Permission) GetListByIds(ids []int, enable bool) []response.Permission {
+func (*Permission) GetListByIds(ids []int, enable bool) []dto.PermissionResponse {
 
-	permissions := make([]response.Permission, 0)
+	permissions := make([]dto.PermissionResponse, 0)
 
 	query := dal.Gorm.Model(&model.Permission{})
 
@@ -30,9 +29,9 @@ func (*Permission) GetListByIds(ids []int, enable bool) []response.Permission {
 }
 
 // 获取资源列表
-func (*Permission) GetList(enable bool) []response.Permission {
+func (*Permission) GetList(enable bool) []dto.PermissionResponse {
 
-	permissions := make([]response.Permission, 0)
+	permissions := make([]dto.PermissionResponse, 0)
 
 	query := dal.Gorm.Model(&model.Permission{})
 
@@ -46,9 +45,9 @@ func (*Permission) GetList(enable bool) []response.Permission {
 }
 
 // 资源列表转资源树
-func (p *Permission) ListToTree(list []response.Permission, parentId int) []response.PermissionTree {
+func (p *Permission) ListToTree(list []dto.PermissionResponse, parentId int) []dto.PermissionTreeResponse {
 
-	tree := make([]response.PermissionTree, 0)
+	tree := make([]dto.PermissionTreeResponse, 0)
 
 	if len(list) <= 0 {
 		return tree
@@ -56,9 +55,9 @@ func (p *Permission) ListToTree(list []response.Permission, parentId int) []resp
 
 	for _, item := range list {
 		if item.ParentId == parentId {
-			tree = append(tree, response.PermissionTree{
-				Permission: item,
-				Children:   p.ListToTree(list, item.Id),
+			tree = append(tree, dto.PermissionTreeResponse{
+				PermissionResponse: item,
+				Children:           p.ListToTree(list, item.Id),
 			})
 		}
 	}
@@ -67,9 +66,9 @@ func (p *Permission) ListToTree(list []response.Permission, parentId int) []resp
 }
 
 // 根据路由地址和请求方法获取资源id
-func (*Permission) GetDetailByPathAndMethod(path string, method string) response.Permission {
+func (*Permission) GetDetailByPathAndMethod(path string, method string) dto.PermissionResponse {
 
-	var permission response.Permission
+	var permission dto.PermissionResponse
 
 	query := dal.Gorm.Model(&model.Permission{}).Where("path = ?", path)
 
@@ -101,12 +100,12 @@ func (*Permission) Delete(id int) error {
 }
 
 // 修改资源
-func (*Permission) Update(param request.PermissionUpdate) error {
+func (*Permission) Update(param dto.PermissionUpdateRequest) error {
 	return dal.Gorm.Model(&model.Permission{}).Where("id = ?", param.Id).Updates(param).Error
 }
 
 // 添加资源
-func (*Permission) Add(param request.PermissionAdd) error {
+func (*Permission) Add(param dto.PermissionAddRequest) error {
 	return dal.Gorm.Model(&model.Permission{}).Select("enable", "order", "show", "keep_alive").Create(&model.Permission{
 		Name:        param.Name,
 		Code:        param.Code,
@@ -127,9 +126,9 @@ func (*Permission) Add(param request.PermissionAdd) error {
 }
 
 // 获取权限按钮
-func (*Permission) GetButtons(parentId int) []response.Permission {
+func (*Permission) GetButtons(parentId int) []dto.PermissionResponse {
 
-	permissions := make([]response.Permission, 0)
+	permissions := make([]dto.PermissionResponse, 0)
 
 	dal.Gorm.Model(&model.Permission{}).Where("parent_id = ?", parentId).Where("type = ?", "BUTTON").Scan(&permissions)
 

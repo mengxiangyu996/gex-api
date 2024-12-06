@@ -1,6 +1,6 @@
-package request
+package dto
 
-type PermissionAdd struct {
+type PermissionAddRequest struct {
 	Name        string `json:"name"`
 	Code        string `json:"code"`
 	Type        string `json:"type"`
@@ -18,7 +18,7 @@ type PermissionAdd struct {
 	Order       int    `json:"order"`
 }
 
-type PermissionUpdate struct {
-	PermissionAdd
+type PermissionUpdateRequest struct {
+	PermissionAddRequest
 	Id int `json:"id"`
 }

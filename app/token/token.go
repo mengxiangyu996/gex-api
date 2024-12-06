@@ -2,7 +2,7 @@ package token
 
 import (
 	"errors"
-	"isme-go/app/response"
+	"isme-go/app/dto"
 	"isme-go/config"
 	"strings"
 	"time"
@@ -21,7 +21,7 @@ type UserClaims struct {
 }
 
 // 获取用户声明
-func GetClaims(user response.UserToken) *UserClaims {
+func GetClaims(user dto.UserTokenResponse) *UserClaims {
 	return &UserClaims{
 		UserId:          user.Id,
 		Username:        user.Username,

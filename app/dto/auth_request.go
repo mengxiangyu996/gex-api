@@ -1,12 +1,12 @@
-package request
+package dto
 
-type Login struct {
+type LoginRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 	Captcha  string `json:"captcha"`
 }
 
-type Password struct {
+type PasswordRequest struct {
 	OldPassword string `json:"oldPassword"`
 	NewPassword string `json:"newPassword"`
 }
