@@ -1,5 +1,5 @@
 # 项目相关配置
-isme-go:
+app:
   # 名称
   name: isme-go
   # 开发环境配置
