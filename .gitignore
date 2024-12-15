@@ -26,3 +26,6 @@ vendor
 
 # 配置文件
 application.yaml
+
+# 资源目录
+public
